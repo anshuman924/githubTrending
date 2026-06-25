@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Trending Report</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #19181a;
+      --panel: #221f22;
+      --panel-strong: #2d2a2e;
+      --text: #fcfcfa;
+      --muted: #c1c0c0;
+      --border: #403e41;
+      --accent: #ffd866;
+      --accent-strong: #ff6188;
+      --accent-soft: rgba(255, 216, 102, 0.14);
+      --green: #a9dc76;
+      --cyan: #78dce8;
+      --purple: #ab9df2;
+      --warn: #fc9867;
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    header {
+      background: linear-gradient(180deg, #2d2a2e 0%, #221f22 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 20px;
+    }
+
+    .topbar {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .title-block {
+      display: grid;
+      gap: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      color: var(--accent);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .sidebar-toggle {
+      width: 42px;
+      min-height: 42px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    .sidebar-toggle span,
+    .sidebar-toggle::before,
+    .sidebar-toggle::after {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .sidebar-toggle {
+      gap: 4px;
+    }
+
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    body.sidebar-collapsed .layout {
+      grid-template-columns: minmax(0, 1fr) 0;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 16px;
+      overflow: hidden;
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease;
+    }
+
+    body.sidebar-collapsed .sidebar {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(12px);
+    }
+
+    .filters {
+      display: grid;
+      gap: 8px;
+    }
+
+    button {
+      min-height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      padding: 7px 12px;
+    }
+
+    button[aria-pressed="true"] {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+      color: #19181a;
+      font-weight: 700;
+    }
+
+    .filters button {
+      width: 100%;
+      text-align: left;
+    }
+
+    .grid {
+      position: relative;
+      min-height: 220px;
+      transition: height 260ms ease;
+    }
+
+    .tile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 320ms ease;
+    }
+
+    .tile.expanded {
+      border-color: rgba(255, 216, 102, 0.48);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+    }
+
+    .tile-toggle {
+      width: 100%;
+      min-height: 160px;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto;
+      gap: 10px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      padding: 14px;
+    }
+
+    .tile-toggle:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: -3px;
+    }
+
+    .repo-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 700;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+      color: var(--text);
+    }
+
+    .repo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 24px;
+    }
+
+    .tag {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: rgba(120, 220, 232, 0.16);
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      text-transform: lowercase;
+    }
+
+    .description {
+      margin: 0;
+      color: var(--muted);
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .tile-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-ok {
+      color: var(--green);
+    }
+
+    .status-failed,
+    .status-readme_fetch_failed,
+    .status-skipped,
+    .status-stale_codex_exec_terminated {
+      color: var(--warn);
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      border-top: 0 solid transparent;
+      background: var(--panel-strong);
+      opacity: 0;
+      padding: 0 14px;
+      transition:
+        max-height 320ms ease,
+        opacity 180ms ease,
+        padding 320ms ease,
+        border-color 320ms ease,
+        border-width 320ms ease;
+    }
+
+    .tile.expanded .details {
+      border-top-width: 1px;
+      border-top-color: var(--border);
+      opacity: 1;
+      padding: 14px;
+    }
+
+    .summary-list {
+      margin: 0 0 12px;
+      padding-left: 20px;
+      color: var(--text);
+    }
+
+    .summary-list li {
+      margin: 0 0 8px;
+    }
+
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid rgba(171, 157, 242, 0.42);
+      border-radius: 8px;
+      background: rgba(171, 157, 242, 0.12);
+      color: var(--purple);
+      font-weight: 600;
+      padding: 7px 12px;
+      text-decoration: none;
+    }
+
+    .repo-link:hover {
+      border-color: var(--purple);
+      background: rgba(171, 157, 242, 0.18);
+    }
+
+    .empty {
+      position: static;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--muted);
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      header {
+        padding: 16px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr) 190px;
+        padding: 14px;
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .tile-toggle {
+        min-height: 140px;
+      }
+
+      .repo-title {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="title-block">
+        <h1>GitHub Trending Report</h1>
+        <div class="meta" id="meta"></div>
+      </div>
+      <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle tag filters" aria-expanded="true"><span></span></button>
+    </div>
+  </header>
+  <main class="layout">
+    <section class="content">
+      <section class="grid" id="repoGrid" aria-live="polite"></section>
+    </section>
+    <aside class="sidebar" id="sidebar">
+      <nav class="filters" id="filters" aria-label="Tag filters"></nav>
+    </aside>
+  </main>
+
+  <script>
+    const report = {"date": "2026-06-18", "languages": [{"name": "trending", "repository_count": 16, "summary_tokens_used": 60566, "repositories": [{"title": "DeusData / codebase-memory-mcp", "description": "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.", "url": "https://github.com/DeusData/codebase-memory-mcp", "summary": "Builds a local knowledge graph of a codebase so AI coding agents can answer structural questions about functions, classes, call chains, routes, and dependencies. Provides MCP tools for architecture summaries, impact analysis, call graph tracing, dead code detection, graph queries, semantic search, and cross-service linking. Indexes source code and infrastructure files across many languages into a persistent SQLite-backed graph, with optional 3D graph visualization. Installs as a local static binary and can auto-configure supported coding agents, with processing kept on the user's machine. Supports shared compressed graph artifacts so teams can reuse an indexed codebase snapshot instead of reindexing from scratch.", "summary_bullets": ["Builds a local knowledge graph of a codebase so AI coding agents can answer structural questions about functions, classes, call chains, routes, and dependencies.", "Provides MCP tools for architecture summaries, impact analysis, call graph tracing, dead code detection, graph queries, semantic search, and cross-service linking.", "Indexes source code and infrastructure files across many languages into a persistent SQLite-backed graph, with optional 3D graph visualization.", "Installs as a local static binary and can auto-configure supported coding agents, with processing kept on the user's machine.", "Supports shared compressed graph artifacts so teams can reuse an indexed codebase snapshot instead of reindexing from scratch."], "tags": ["ai agent", "developer tool", "code intelligence"], "summary_tokens_used": 5084, "summary_status": "ok"}, {"title": "n0-computer / iroh", "description": "IP addresses break, dial keys instead. Modular networking stack in Rust.", "url": "https://github.com/n0-computer/iroh", "summary": "Provides an API for connecting to devices or endpoints by public key while finding and maintaining the fastest available connection. Attempts direct peer-to-peer connections with hole punching and falls back to public relay servers when direct connectivity is not possible. Builds on QUIC to provide encrypted connections, concurrent streams, stream priorities, datagrams, and avoidance of head-of-line blocking. Includes reusable protocols for content-addressed blob transfer, publish-subscribe overlay networks, and an eventually consistent key-value store. Supports use as a Rust library, with FFI bindings available for other languages.", "summary_bullets": ["Provides an API for connecting to devices or endpoints by public key while finding and maintaining the fastest available connection.", "Attempts direct peer-to-peer connections with hole punching and falls back to public relay servers when direct connectivity is not possible.", "Builds on QUIC to provide encrypted connections, concurrent streams, stream priorities, datagrams, and avoidance of head-of-line blocking.", "Includes reusable protocols for content-addressed blob transfer, publish-subscribe overlay networks, and an eventually consistent key-value store.", "Supports use as a Rust library, with FFI bindings available for other languages."], "tags": ["networking", "developer tool"], "summary_tokens_used": 3178, "summary_status": "ok"}, {"title": "Panniantong / Agent-Reach", "description": "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.", "url": "https://github.com/Panniantong/Agent-Reach", "summary": "Installs and configures internet access capabilities for AI coding agents that can run command-line tools. Provides routed access to web pages, YouTube transcripts, RSS feeds, GitHub repositories, search, and other platforms through selected upstream tools. Includes a doctor command to check which platform backends are available and suggest fixes when a channel is broken. Supports optional login-based access for platforms such as Twitter/X, Reddit, Xiaohongshu, LinkedIn, and Bilibili while storing credentials locally. Designed for agents such as Claude Code, OpenClaw, Cursor, Windsurf, and Codex that need to read online content during research or coding tasks.", "summary_bullets": ["Installs and configures internet access capabilities for AI coding agents that can run command-line tools.", "Provides routed access to web pages, YouTube transcripts, RSS feeds, GitHub repositories, search, and other platforms through selected upstream tools.", "Includes a doctor command to check which platform backends are available and suggest fixes when a channel is broken.", "Supports optional login-based access for platforms such as Twitter/X, Reddit, Xiaohongshu, LinkedIn, and Bilibili while storing credentials locally.", "Designed for agents such as Claude Code, OpenClaw, Cursor, Windsurf, and Codex that need to read online content during research or coding tasks."], "tags": ["ai agent", "developer tool", "web research", "cli tool"], "summary_tokens_used": 6812, "summary_status": "ok"}, {"title": "meshery / meshery", "description": "Meshery, the cloud native manager", "url": "https://github.com/meshery/meshery", "summary": "Meshery is an open source cloud native management platform for designing and operating Kubernetes-based infrastructure and applications across multiple clouds. It provides a single interface for managing multiple Kubernetes clusters, connections, credentials, environments, and team workspaces. Users can visually design infrastructure, apply GitOps workflows, preview pull request changes, and run Kubernetes dry-run checks before deployment. Meshery includes policy, template, and relationship features for enforcing configuration practices without requiring users to write Rego policies. It supports performance testing, load generation, metrics collection, and comparison of infrastructure and workload behavior over time.", "summary_bullets": ["Meshery is an open source cloud native management platform for designing and operating Kubernetes-based infrastructure and applications across multiple clouds.", "It provides a single interface for managing multiple Kubernetes clusters, connections, credentials, environments, and team workspaces.", "Users can visually design infrastructure, apply GitOps workflows, preview pull request changes, and run Kubernetes dry-run checks before deployment.", "Meshery includes policy, template, and relationship features for enforcing configuration practices without requiring users to write Rego policies.", "It supports performance testing, load generation, metrics collection, and comparison of infrastructure and workload behavior over time."], "tags": ["developer tool", "cloud infrastructure", "collaboration", "performance testing"], "summary_tokens_used": 4174, "summary_status": "ok"}, {"title": "obra / superpowers", "description": "An agentic skills framework & software development methodology that works.", "url": "https://github.com/obra/superpowers", "summary": "Provides a software development methodology for coding agents using composable skills and startup instructions. Guides agents through brainstorming, design review, implementation planning, test-driven development, code review, and branch completion workflows. Supports installation across multiple coding-agent harnesses, including Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot CLI, and others. Includes skills for testing, debugging, collaboration, parallel agent work, code review, and creating new skills. Intended for developers and teams who want coding agents to follow structured, verifiable engineering processes.", "summary_bullets": ["Provides a software development methodology for coding agents using composable skills and startup instructions.", "Guides agents through brainstorming, design review, implementation planning, test-driven development, code review, and branch completion workflows.", "Supports installation across multiple coding-agent harnesses, including Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot CLI, and others.", "Includes skills for testing, debugging, collaboration, parallel agent work, code review, and creating new skills.", "Intended for developers and teams who want coding agents to follow structured, verifiable engineering processes."], "tags": ["ai agent", "developer tool", "collaboration"], "summary_tokens_used": 4263, "summary_status": "ok"}, {"title": "google-research / timesfm", "description": "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.", "url": "https://github.com/google-research/timesfm", "summary": "Pretrained time-series foundation model from Google Research for forecasting future values from historical time-series data. Provides TimesFM 2.5 checkpoints with support for long context forecasting, quantile forecasts, and covariates through XReg. Can be used from Python for point and quantile forecasts across multiple input series. Includes examples, documentation, unit tests, and a fine-tuning example for adapting the model.", "summary_bullets": ["Pretrained time-series foundation model from Google Research for forecasting future values from historical time-series data.", "Provides TimesFM 2.5 checkpoints with support for long context forecasting, quantile forecasts, and covariates through XReg.", "Can be used from Python for point and quantile forecasts across multiple input series.", "Includes examples, documentation, unit tests, and a fine-tuning example for adapting the model."], "tags": ["forecasting", "data science", "machine learning"], "summary_tokens_used": 3194, "summary_status": "ok"}, {"title": "RocketChat / Rocket.Chat", "description": "The Secure CommsOS™ for mission-critical operations", "url": "https://github.com/RocketChat/Rocket.Chat", "summary": "Open-source communications platform for organizations that need secure team messaging and collaboration. Supports real-time and asynchronous conversations with colleagues, external companies, customers, or citizens. Provides self-hosted, cloud, and air-gapped deployment options for regulated or high-security environments. Includes security features such as identity management, end-to-end encryption, and role or attribute-based access control. Offers web, desktop, and mobile apps with options to extend the platform through marketplace apps and custom integrations.", "summary_bullets": ["Open-source communications platform for organizations that need secure team messaging and collaboration.", "Supports real-time and asynchronous conversations with colleagues, external companies, customers, or citizens.", "Provides self-hosted, cloud, and air-gapped deployment options for regulated or high-security environments.", "Includes security features such as identity management, end-to-end encryption, and role or attribute-based access control.", "Offers web, desktop, and mobile apps with options to extend the platform through marketplace apps and custom integrations."], "tags": ["collaboration", "security", "communications"], "summary_tokens_used": 3219, "summary_status": "ok"}, {"title": "continuedev / continue", "description": "open-source coding agent", "url": "https://github.com/continuedev/continue", "summary": "Continue is an open-source coding agent for developer workflows. It is available as a CLI, VS Code extension, and JetBrains plugin. The project provides documentation for configuration, customization, and how the agent works. The repository is read-only and no longer actively maintained after the final 2.0.0 release.", "summary_bullets": ["Continue is an open-source coding agent for developer workflows.", "It is available as a CLI, VS Code extension, and JetBrains plugin.", "The project provides documentation for configuration, customization, and how the agent works.", "The repository is read-only and no longer actively maintained after the final 2.0.0 release."], "tags": ["ai agent", "developer tool", "cli tool"], "summary_tokens_used": 2470, "summary_status": "ok"}, {"title": "penpot / penpot", "description": "Penpot: The open-source design tool for design and code collaboration", "url": "https://github.com/penpot/penpot", "summary": "Open-source design and prototyping platform for teams building digital products. Supports browser use, SaaS, and self-hosted deployments for teams that need control over their design environment. Connects design and development through inspect mode, code-oriented outputs, APIs, webhooks, and plugins. Provides real-time collaboration plus design system features such as design tokens, components, and variants. Includes responsive layout tools such as CSS Grid and Flex Layout to model interfaces closer to real code.", "summary_bullets": ["Open-source design and prototyping platform for teams building digital products.", "Supports browser use, SaaS, and self-hosted deployments for teams that need control over their design environment.", "Connects design and development through inspect mode, code-oriented outputs, APIs, webhooks, and plugins.", "Provides real-time collaboration plus design system features such as design tokens, components, and variants.", "Includes responsive layout tools such as CSS Grid and Flex Layout to model interfaces closer to real code."], "tags": ["design tool", "collaboration", "developer tool"], "summary_tokens_used": 3445, "summary_status": "ok"}, {"title": "krahets / hello-algo", "description": "《Hello 算法》：动画图解、一键运行的数据结构与算法教程。支持简中、繁中、English、日本語，提供 Python, Java, C++, C, C#, JS, Go, Swift, Rust, Ruby, Kotlin, TS, Dart 等代码实现", "url": "https://github.com/krahets/hello-algo", "summary": "Open-source introductory tutorial for learning data structures and algorithms. Uses animated diagrams to explain concepts with a beginner-friendly learning path. Includes runnable source code so readers can practice and understand algorithm behavior and data structure implementations. Supports multiple languages and invites contributions for code translations, review, and content corrections.", "summary_bullets": ["Open-source introductory tutorial for learning data structures and algorithms.", "Uses animated diagrams to explain concepts with a beginner-friendly learning path.", "Includes runnable source code so readers can practice and understand algorithm behavior and data structure implementations.", "Supports multiple languages and invites contributions for code translations, review, and content corrections."], "tags": ["education"], "summary_tokens_used": 2748, "summary_status": "ok"}, {"title": "Universal-Debloater-Alliance / universal-android-debloater-next-generation", "description": "Cross-platform GUI written in Rust using ADB to debloat non-rooted Android devices. Improve your privacy, the security and battery life of your device.", "url": "https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation", "summary": "Detached fork of Universal Android Debloater focused on removing unnecessary or obscure Android system apps. Aims to improve device privacy and efficiency by reducing unwanted apps that may affect energy use, speed, and memory. Can help reduce security exposure by lowering the number of installed system components. Provides documentation through a wiki, including getting started, usage guidance, features, app replacements, and Android OEM behavior. Does not collect or transmit user data beyond GitHub requests for package lists and update checks.", "summary_bullets": ["Detached fork of Universal Android Debloater focused on removing unnecessary or obscure Android system apps.", "Aims to improve device privacy and efficiency by reducing unwanted apps that may affect energy use, speed, and memory.", "Can help reduce security exposure by lowering the number of installed system components.", "Provides documentation through a wiki, including getting started, usage guidance, features, app replacements, and Android OEM behavior.", "Does not collect or transmit user data beyond GitHub requests for package lists and update checks."], "tags": ["android", "privacy", "security"], "summary_tokens_used": 2678, "summary_status": "ok"}, {"title": "mattpocock / skills", "description": "Skills for Real Engineers. Straight from my .claude directory.", "url": "https://github.com/mattpocock/skills", "summary": "Provides a collection of small, composable agent skills for software engineering workflows. Focuses on common coding-agent failure modes such as misalignment, verbosity, weak feedback loops, and poor codebase design. Includes skills for grilling requirements, writing PRDs, triaging issues, TDD, debugging, domain modeling, and architecture improvement. Supports setup across coding agents and can use GitHub, Linear, or local files for issue tracking.", "summary_bullets": ["Provides a collection of small, composable agent skills for software engineering workflows.", "Focuses on common coding-agent failure modes such as misalignment, verbosity, weak feedback loops, and poor codebase design.", "Includes skills for grilling requirements, writing PRDs, triaging issues, TDD, debugging, domain modeling, and architecture improvement.", "Supports setup across coding agents and can use GitHub, Linear, or local files for issue tracking."], "tags": ["ai agent", "developer tool", "productivity"], "summary_tokens_used": 4299, "summary_status": "ok"}, {"title": "yairm210 / Unciv", "description": "Open-source Android/Desktop remake of Civ V", "url": "https://github.com/yairm210/Unciv", "summary": "Open source remake of Civilization V for Android and desktop platforms. Provides a small, fast, moddable 4X strategy game intended to run on low-end hardware. Supports installation across Android, Linux, Windows, Raspberry Pi, and macOS. Includes in-game tutorial information and Civilopedia content for learning how to play. Welcomes contributions from programmers, translators, and modders through issues and pull requests.", "summary_bullets": ["Open source remake of Civilization V for Android and desktop platforms.", "Provides a small, fast, moddable 4X strategy game intended to run on low-end hardware.", "Supports installation across Android, Linux, Windows, Raspberry Pi, and macOS.", "Includes in-game tutorial information and Civilopedia content for learning how to play.", "Welcomes contributions from programmers, translators, and modders through issues and pull requests."], "tags": ["game", "android"], "summary_tokens_used": 3279, "summary_status": "ok"}, {"title": "freeCodeCamp / freeCodeCamp", "description": "freeCodeCamp.org's open-source codebase and curriculum. Learn math, programming, and computer science for free.", "url": "https://github.com/freeCodeCamp/freeCodeCamp", "summary": "Open-source codebase and curriculum for freeCodeCamp.org, a free platform for learning to code. Provides self-paced full-stack web development and machine learning curriculum with interactive coding challenges. Offers free developer and language certifications that include lessons, projects, quizzes, and exams. Supports learners through a forum, YouTube courses, technical articles, and a Discord community. Includes interview preparation resources and additional coding practice through related curricula.", "summary_bullets": ["Open-source codebase and curriculum for freeCodeCamp.org, a free platform for learning to code.", "Provides self-paced full-stack web development and machine learning curriculum with interactive coding challenges.", "Offers free developer and language certifications that include lessons, projects, quizzes, and exams.", "Supports learners through a forum, YouTube courses, technical articles, and a Discord community.", "Includes interview preparation resources and additional coding practice through related curricula."], "tags": ["education", "developer tool", "community"], "summary_tokens_used": 3063, "summary_status": "ok"}, {"title": "bytedance / UI-TARS-desktop", "description": "The Open-Source Multimodal AI Agent Stack: Connecting Cutting-Edge AI Models and Agent Infra", "url": "https://github.com/bytedance/UI-TARS-desktop", "summary": "Provides a multimodal AI agent stack for controlling terminals, computers, browsers, and products with GUI and vision capabilities. Includes Agent TARS, which ships as a CLI and Web UI for human-like task completion using multimodal models and MCP tool integrations. Includes UI-TARS Desktop, a native desktop GUI agent for local and remote computer or browser operation. Supports natural-language control, screenshot-based visual recognition, precise mouse and keyboard actions, and real-time feedback. Targets users who want AI-assisted automation for desktop, browser, and tool-based workflows.", "summary_bullets": ["Provides a multimodal AI agent stack for controlling terminals, computers, browsers, and products with GUI and vision capabilities.", "Includes Agent TARS, which ships as a CLI and Web UI for human-like task completion using multimodal models and MCP tool integrations.", "Includes UI-TARS Desktop, a native desktop GUI agent for local and remote computer or browser operation.", "Supports natural-language control, screenshot-based visual recognition, precise mouse and keyboard actions, and real-time feedback.", "Targets users who want AI-assisted automation for desktop, browser, and tool-based workflows."], "tags": ["ai agent", "automation", "desktop", "browser"], "summary_tokens_used": 3815, "summary_status": "ok"}, {"title": "nautechsystems / nautilus_trader", "description": "Production-grade Rust-native trading engine with deterministic event-driven architecture", "url": "https://github.com/nautechsystems/nautilus_trader", "summary": "Open-source engine for building multi-asset, multi-venue trading systems across research, simulation, backtesting, and live execution. Uses a deterministic event-driven architecture so strategies can move from research to live deployment without code changes. Supports modular adapters for REST APIs and WebSocket feeds, with integrations for crypto exchanges, traditional markets, betting exchanges, brokers, and data providers. Provides backtesting across multiple venues, instruments, and strategies using historical tick, bar, order book, and custom data. Designed for individual and small-team quantitative traders focused on single-node backtesting and live trading.", "summary_bullets": ["Open-source engine for building multi-asset, multi-venue trading systems across research, simulation, backtesting, and live execution.", "Uses a deterministic event-driven architecture so strategies can move from research to live deployment without code changes.", "Supports modular adapters for REST APIs and WebSocket feeds, with integrations for crypto exchanges, traditional markets, betting exchanges, brokers, and data providers.", "Provides backtesting across multiple venues, instruments, and strategies using historical tick, bar, order book, and custom data.", "Designed for individual and small-team quantitative traders focused on single-node backtesting and live trading."], "tags": ["trading"], "summary_tokens_used": 4845, "summary_status": "ok"}]}], "total_repositories": 16, "total_summary_tokens_used": 60566};
+    const state = {
+      report,
+      activeTag: 'all',
+    };
+
+    const meta = document.getElementById('meta');
+    const filters = document.getElementById('filters');
+    const repoGrid = document.getElementById('repoGrid');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    let tileObserver = null;
+
+    sidebarToggle.addEventListener('click', () => {
+      const collapsed = document.body.classList.toggle('sidebar-collapsed');
+      sidebarToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      layoutTilesSoon();
+    });
+
+    render();
+
+    function render() {
+      renderMeta();
+      renderFilters();
+      renderRepos();
+    }
+
+    function renderMeta() {
+      meta.innerHTML = [
+        `<span>Date: ${escapeHtml(state.report.date)}</span>`,
+        `<span>Repos: ${state.report.total_repositories}</span>`,
+        `<span>Summary tokens: ${state.report.total_summary_tokens_used}</span>`,
+      ].join('');
+    }
+
+    function renderFilters() {
+      const repos = flattenRepos();
+      const tags = sortedTagsByFrequency(repos);
+      const buttons = ['all', ...tags].map((tag) => {
+        const label = tag === 'all' ? 'All' : `${tag} ${tagCount(repos, tag)}`;
+        const pressed = state.activeTag === tag ? 'true' : 'false';
+        return `<button type="button" aria-pressed="${pressed}" data-tag="${escapeAttribute(tag)}">${escapeHtml(label)}</button>`;
+      });
+
+      filters.innerHTML = buttons.join('');
+      filters.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => {
+          state.activeTag = button.dataset.tag;
+          render();
+        });
+      });
+    }
+
+    function renderRepos() {
+      const repos = flattenRepos().filter((repo) => {
+        return state.activeTag === 'all' || repoTags(repo).includes(state.activeTag);
+      });
+
+      if (!repos.length) {
+        repoGrid.innerHTML = '<div class="empty">No repositories for this filter.</div>';
+        repoGrid.style.height = 'auto';
+        return;
+      }
+
+      repoGrid.innerHTML = repos.map(renderRepo).join('');
+      observeTileSizes();
+      repoGrid.querySelectorAll('.tile-toggle').forEach((button) => {
+        button.addEventListener('click', () => {
+          const tile = button.closest('.tile');
+          const wasExpanded = tile.classList.contains('expanded');
+
+          if (wasExpanded) {
+            closeExpandedTile();
+            layoutTilesSoon();
+            return;
+          }
+
+          closeExpandedTile();
+          tile.classList.add('expanded');
+          button.setAttribute('aria-expanded', 'true');
+          setDetailsHeight(tile);
+          layoutTilesSoon();
+        });
+      });
+      layoutTilesSoon();
+    }
+
+    function closeExpandedTile() {
+      repoGrid.querySelectorAll('.tile.expanded').forEach((tile) => {
+        tile.classList.remove('expanded');
+        const details = tile.querySelector('.details');
+        if (details) {
+          details.style.maxHeight = '0px';
+        }
+        const button = tile.querySelector('.tile-toggle');
+        if (button) {
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    function setDetailsHeight(tile) {
+      const details = tile.querySelector('.details');
+      if (details) {
+        details.style.maxHeight = `${details.scrollHeight + 160}px`;
+      }
+    }
+
+    function observeTileSizes() {
+      if (tileObserver) {
+        tileObserver.disconnect();
+      }
+
+      tileObserver = new ResizeObserver(() => layoutTilesSoon());
+      repoGrid.querySelectorAll('.tile').forEach((tile) => tileObserver.observe(tile));
+    }
+
+    function layoutTilesSoon() {
+      requestAnimationFrame(layoutTiles);
+    }
+
+    function layoutTiles() {
+      const tiles = [...repoGrid.querySelectorAll('.tile')];
+      if (!tiles.length) {
+        return;
+      }
+
+      const gap = 14;
+      const minColumnWidth = 280;
+      const containerWidth = repoGrid.clientWidth;
+      const columns = Math.max(1, Math.floor((containerWidth + gap) / (minColumnWidth + gap)));
+      const columnWidth = (containerWidth - gap * (columns - 1)) / columns;
+      const columnHeights = Array(columns).fill(0);
+
+      tiles.forEach((tile) => {
+        tile.style.width = `${columnWidth}px`;
+        const column = columnHeights.indexOf(Math.min(...columnHeights));
+        const x = column * (columnWidth + gap);
+        const y = columnHeights[column];
+
+        tile.style.transform = `translate(${x}px, ${y}px)`;
+        columnHeights[column] += tile.offsetHeight + gap;
+      });
+
+      repoGrid.style.height = `${Math.max(...columnHeights) - gap}px`;
+    }
+
+    window.addEventListener('resize', layoutTilesSoon);
+
+    function sortedTagsByFrequency(repos) {
+      const counts = new Map();
+      repos.forEach((repo) => {
+        repoTags(repo).forEach((tag) => {
+          counts.set(tag, (counts.get(tag) || 0) + 1);
+        });
+      });
+
+      return [...counts.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([tag]) => tag);
+    }
+
+    function tagCount(repos, tag) {
+      return repos.filter((repo) => repoTags(repo).includes(tag)).length;
+    }
+
+    function repoTags(repo) {
+      return Array.isArray(repo.tags) ? repo.tags.slice(0, 5) : [];
+    }
+
+    function repoBullets(repo) {
+      if (Array.isArray(repo.summary_bullets) && repo.summary_bullets.length) {
+        return repo.summary_bullets;
+      }
+
+      return [repo.summary || 'Summary unavailable.'];
+    }
+
+    function flattenRepos() {
+      return state.report.languages.flatMap((language) => {
+        return language.repositories.map((repo) => ({ ...repo }));
+      });
+    }
+
+    function renderRepo(repo) {
+      const statusClass = `status-${repo.summary_status}`;
+      const tags = repoTags(repo);
+      const tagHtml = tags.length
+        ? tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('')
+        : '<span class="tag">untagged</span>';
+      const bullets = repoBullets(repo)
+        .map((bullet) => `<li>${escapeHtml(bullet)}</li>`)
+        .join('');
+
+      return `
+        <article class="tile">
+          <button type="button" class="tile-toggle" aria-expanded="false">
+            <div class="repo-title">
+              <span>${escapeHtml(repo.title)}</span>
+            </div>
+            <p class="description">${escapeHtml(repo.description || 'No description provided.')}</p>
+            <div class="repo-tags">${tagHtml}</div>
+            <div class="tile-footer">
+              <span class="${escapeHtml(statusClass)}">${escapeHtml(repo.summary_status)}</span>
+              <span>${repo.summary_tokens_used} tokens</span>
+            </div>
+          </button>
+          <div class="details">
+            <ul class="summary-list">${bullets}</ul>
+            <a class="repo-link" href="${escapeAttribute(repo.url)}" target="_blank" rel="noopener">Open repository</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value).replace(/`/g, '&#96;');
+    }
+  </script>
+</body>
+</html>

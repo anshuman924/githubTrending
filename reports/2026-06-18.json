@@ -1,0 +1,327 @@
+{
+  "date": "2026-06-18",
+  "languages": [
+    {
+      "name": "trending",
+      "repository_count": 16,
+      "summary_tokens_used": 60566,
+      "repositories": [
+        {
+          "title": "DeusData / codebase-memory-mcp",
+          "description": "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+          "url": "https://github.com/DeusData/codebase-memory-mcp",
+          "summary": "Builds a local knowledge graph of a codebase so AI coding agents can answer structural questions about functions, classes, call chains, routes, and dependencies. Provides MCP tools for architecture summaries, impact analysis, call graph tracing, dead code detection, graph queries, semantic search, and cross-service linking. Indexes source code and infrastructure files across many languages into a persistent SQLite-backed graph, with optional 3D graph visualization. Installs as a local static binary and can auto-configure supported coding agents, with processing kept on the user's machine. Supports shared compressed graph artifacts so teams can reuse an indexed codebase snapshot instead of reindexing from scratch.",
+          "summary_bullets": [
+            "Builds a local knowledge graph of a codebase so AI coding agents can answer structural questions about functions, classes, call chains, routes, and dependencies.",
+            "Provides MCP tools for architecture summaries, impact analysis, call graph tracing, dead code detection, graph queries, semantic search, and cross-service linking.",
+            "Indexes source code and infrastructure files across many languages into a persistent SQLite-backed graph, with optional 3D graph visualization.",
+            "Installs as a local static binary and can auto-configure supported coding agents, with processing kept on the user's machine.",
+            "Supports shared compressed graph artifacts so teams can reuse an indexed codebase snapshot instead of reindexing from scratch."
+          ],
+          "tags": [
+            "ai agent",
+            "developer tool",
+            "code intelligence"
+          ],
+          "summary_tokens_used": 5084,
+          "summary_status": "ok"
+        },
+        {
+          "title": "n0-computer / iroh",
+          "description": "IP addresses break, dial keys instead. Modular networking stack in Rust.",
+          "url": "https://github.com/n0-computer/iroh",
+          "summary": "Provides an API for connecting to devices or endpoints by public key while finding and maintaining the fastest available connection. Attempts direct peer-to-peer connections with hole punching and falls back to public relay servers when direct connectivity is not possible. Builds on QUIC to provide encrypted connections, concurrent streams, stream priorities, datagrams, and avoidance of head-of-line blocking. Includes reusable protocols for content-addressed blob transfer, publish-subscribe overlay networks, and an eventually consistent key-value store. Supports use as a Rust library, with FFI bindings available for other languages.",
+          "summary_bullets": [
+            "Provides an API for connecting to devices or endpoints by public key while finding and maintaining the fastest available connection.",
+            "Attempts direct peer-to-peer connections with hole punching and falls back to public relay servers when direct connectivity is not possible.",
+            "Builds on QUIC to provide encrypted connections, concurrent streams, stream priorities, datagrams, and avoidance of head-of-line blocking.",
+            "Includes reusable protocols for content-addressed blob transfer, publish-subscribe overlay networks, and an eventually consistent key-value store.",
+            "Supports use as a Rust library, with FFI bindings available for other languages."
+          ],
+          "tags": [
+            "networking",
+            "developer tool"
+          ],
+          "summary_tokens_used": 3178,
+          "summary_status": "ok"
+        },
+        {
+          "title": "Panniantong / Agent-Reach",
+          "description": "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
+          "url": "https://github.com/Panniantong/Agent-Reach",
+          "summary": "Installs and configures internet access capabilities for AI coding agents that can run command-line tools. Provides routed access to web pages, YouTube transcripts, RSS feeds, GitHub repositories, search, and other platforms through selected upstream tools. Includes a doctor command to check which platform backends are available and suggest fixes when a channel is broken. Supports optional login-based access for platforms such as Twitter/X, Reddit, Xiaohongshu, LinkedIn, and Bilibili while storing credentials locally. Designed for agents such as Claude Code, OpenClaw, Cursor, Windsurf, and Codex that need to read online content during research or coding tasks.",
+          "summary_bullets": [
+            "Installs and configures internet access capabilities for AI coding agents that can run command-line tools.",
+            "Provides routed access to web pages, YouTube transcripts, RSS feeds, GitHub repositories, search, and other platforms through selected upstream tools.",
+            "Includes a doctor command to check which platform backends are available and suggest fixes when a channel is broken.",
+            "Supports optional login-based access for platforms such as Twitter/X, Reddit, Xiaohongshu, LinkedIn, and Bilibili while storing credentials locally.",
+            "Designed for agents such as Claude Code, OpenClaw, Cursor, Windsurf, and Codex that need to read online content during research or coding tasks."
+          ],
+          "tags": [
+            "ai agent",
+            "developer tool",
+            "web research",
+            "cli tool"
+          ],
+          "summary_tokens_used": 6812,
+          "summary_status": "ok"
+        },
+        {
+          "title": "meshery / meshery",
+          "description": "Meshery, the cloud native manager",
+          "url": "https://github.com/meshery/meshery",
+          "summary": "Meshery is an open source cloud native management platform for designing and operating Kubernetes-based infrastructure and applications across multiple clouds. It provides a single interface for managing multiple Kubernetes clusters, connections, credentials, environments, and team workspaces. Users can visually design infrastructure, apply GitOps workflows, preview pull request changes, and run Kubernetes dry-run checks before deployment. Meshery includes policy, template, and relationship features for enforcing configuration practices without requiring users to write Rego policies. It supports performance testing, load generation, metrics collection, and comparison of infrastructure and workload behavior over time.",
+          "summary_bullets": [
+            "Meshery is an open source cloud native management platform for designing and operating Kubernetes-based infrastructure and applications across multiple clouds.",
+            "It provides a single interface for managing multiple Kubernetes clusters, connections, credentials, environments, and team workspaces.",
+            "Users can visually design infrastructure, apply GitOps workflows, preview pull request changes, and run Kubernetes dry-run checks before deployment.",
+            "Meshery includes policy, template, and relationship features for enforcing configuration practices without requiring users to write Rego policies.",
+            "It supports performance testing, load generation, metrics collection, and comparison of infrastructure and workload behavior over time."
+          ],
+          "tags": [
+            "developer tool",
+            "cloud infrastructure",
+            "collaboration",
+            "performance testing"
+          ],
+          "summary_tokens_used": 4174,
+          "summary_status": "ok"
+        },
+        {
+          "title": "obra / superpowers",
+          "description": "An agentic skills framework & software development methodology that works.",
+          "url": "https://github.com/obra/superpowers",
+          "summary": "Provides a software development methodology for coding agents using composable skills and startup instructions. Guides agents through brainstorming, design review, implementation planning, test-driven development, code review, and branch completion workflows. Supports installation across multiple coding-agent harnesses, including Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot CLI, and others. Includes skills for testing, debugging, collaboration, parallel agent work, code review, and creating new skills. Intended for developers and teams who want coding agents to follow structured, verifiable engineering processes.",
+          "summary_bullets": [
+            "Provides a software development methodology for coding agents using composable skills and startup instructions.",
+            "Guides agents through brainstorming, design review, implementation planning, test-driven development, code review, and branch completion workflows.",
+            "Supports installation across multiple coding-agent harnesses, including Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot CLI, and others.",
+            "Includes skills for testing, debugging, collaboration, parallel agent work, code review, and creating new skills.",
+            "Intended for developers and teams who want coding agents to follow structured, verifiable engineering processes."
+          ],
+          "tags": [
+            "ai agent",
+            "developer tool",
+            "collaboration"
+          ],
+          "summary_tokens_used": 4263,
+          "summary_status": "ok"
+        },
+        {
+          "title": "google-research / timesfm",
+          "description": "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
+          "url": "https://github.com/google-research/timesfm",
+          "summary": "Pretrained time-series foundation model from Google Research for forecasting future values from historical time-series data. Provides TimesFM 2.5 checkpoints with support for long context forecasting, quantile forecasts, and covariates through XReg. Can be used from Python for point and quantile forecasts across multiple input series. Includes examples, documentation, unit tests, and a fine-tuning example for adapting the model.",
+          "summary_bullets": [
+            "Pretrained time-series foundation model from Google Research for forecasting future values from historical time-series data.",
+            "Provides TimesFM 2.5 checkpoints with support for long context forecasting, quantile forecasts, and covariates through XReg.",
+            "Can be used from Python for point and quantile forecasts across multiple input series.",
+            "Includes examples, documentation, unit tests, and a fine-tuning example for adapting the model."
+          ],
+          "tags": [
+            "forecasting",
+            "data science",
+            "machine learning"
+          ],
+          "summary_tokens_used": 3194,
+          "summary_status": "ok"
+        },
+        {
+          "title": "RocketChat / Rocket.Chat",
+          "description": "The Secure CommsOS™ for mission-critical operations",
+          "url": "https://github.com/RocketChat/Rocket.Chat",
+          "summary": "Open-source communications platform for organizations that need secure team messaging and collaboration. Supports real-time and asynchronous conversations with colleagues, external companies, customers, or citizens. Provides self-hosted, cloud, and air-gapped deployment options for regulated or high-security environments. Includes security features such as identity management, end-to-end encryption, and role or attribute-based access control. Offers web, desktop, and mobile apps with options to extend the platform through marketplace apps and custom integrations.",
+          "summary_bullets": [
+            "Open-source communications platform for organizations that need secure team messaging and collaboration.",
+            "Supports real-time and asynchronous conversations with colleagues, external companies, customers, or citizens.",
+            "Provides self-hosted, cloud, and air-gapped deployment options for regulated or high-security environments.",
+            "Includes security features such as identity management, end-to-end encryption, and role or attribute-based access control.",
+            "Offers web, desktop, and mobile apps with options to extend the platform through marketplace apps and custom integrations."
+          ],
+          "tags": [
+            "collaboration",
+            "security",
+            "communications"
+          ],
+          "summary_tokens_used": 3219,
+          "summary_status": "ok"
+        },
+        {
+          "title": "continuedev / continue",
+          "description": "open-source coding agent",
+          "url": "https://github.com/continuedev/continue",
+          "summary": "Continue is an open-source coding agent for developer workflows. It is available as a CLI, VS Code extension, and JetBrains plugin. The project provides documentation for configuration, customization, and how the agent works. The repository is read-only and no longer actively maintained after the final 2.0.0 release.",
+          "summary_bullets": [
+            "Continue is an open-source coding agent for developer workflows.",
+            "It is available as a CLI, VS Code extension, and JetBrains plugin.",
+            "The project provides documentation for configuration, customization, and how the agent works.",
+            "The repository is read-only and no longer actively maintained after the final 2.0.0 release."
+          ],
+          "tags": [
+            "ai agent",
+            "developer tool",
+            "cli tool"
+          ],
+          "summary_tokens_used": 2470,
+          "summary_status": "ok"
+        },
+        {
+          "title": "penpot / penpot",
+          "description": "Penpot: The open-source design tool for design and code collaboration",
+          "url": "https://github.com/penpot/penpot",
+          "summary": "Open-source design and prototyping platform for teams building digital products. Supports browser use, SaaS, and self-hosted deployments for teams that need control over their design environment. Connects design and development through inspect mode, code-oriented outputs, APIs, webhooks, and plugins. Provides real-time collaboration plus design system features such as design tokens, components, and variants. Includes responsive layout tools such as CSS Grid and Flex Layout to model interfaces closer to real code.",
+          "summary_bullets": [
+            "Open-source design and prototyping platform for teams building digital products.",
+            "Supports browser use, SaaS, and self-hosted deployments for teams that need control over their design environment.",
+            "Connects design and development through inspect mode, code-oriented outputs, APIs, webhooks, and plugins.",
+            "Provides real-time collaboration plus design system features such as design tokens, components, and variants.",
+            "Includes responsive layout tools such as CSS Grid and Flex Layout to model interfaces closer to real code."
+          ],
+          "tags": [
+            "design tool",
+            "collaboration",
+            "developer tool"
+          ],
+          "summary_tokens_used": 3445,
+          "summary_status": "ok"
+        },
+        {
+          "title": "krahets / hello-algo",
+          "description": "《Hello 算法》：动画图解、一键运行的数据结构与算法教程。支持简中、繁中、English、日本語，提供 Python, Java, C++, C, C#, JS, Go, Swift, Rust, Ruby, Kotlin, TS, Dart 等代码实现",
+          "url": "https://github.com/krahets/hello-algo",
+          "summary": "Open-source introductory tutorial for learning data structures and algorithms. Uses animated diagrams to explain concepts with a beginner-friendly learning path. Includes runnable source code so readers can practice and understand algorithm behavior and data structure implementations. Supports multiple languages and invites contributions for code translations, review, and content corrections.",
+          "summary_bullets": [
+            "Open-source introductory tutorial for learning data structures and algorithms.",
+            "Uses animated diagrams to explain concepts with a beginner-friendly learning path.",
+            "Includes runnable source code so readers can practice and understand algorithm behavior and data structure implementations.",
+            "Supports multiple languages and invites contributions for code translations, review, and content corrections."
+          ],
+          "tags": [
+            "education"
+          ],
+          "summary_tokens_used": 2748,
+          "summary_status": "ok"
+        },
+        {
+          "title": "Universal-Debloater-Alliance / universal-android-debloater-next-generation",
+          "description": "Cross-platform GUI written in Rust using ADB to debloat non-rooted Android devices. Improve your privacy, the security and battery life of your device.",
+          "url": "https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation",
+          "summary": "Detached fork of Universal Android Debloater focused on removing unnecessary or obscure Android system apps. Aims to improve device privacy and efficiency by reducing unwanted apps that may affect energy use, speed, and memory. Can help reduce security exposure by lowering the number of installed system components. Provides documentation through a wiki, including getting started, usage guidance, features, app replacements, and Android OEM behavior. Does not collect or transmit user data beyond GitHub requests for package lists and update checks.",
+          "summary_bullets": [
+            "Detached fork of Universal Android Debloater focused on removing unnecessary or obscure Android system apps.",
+            "Aims to improve device privacy and efficiency by reducing unwanted apps that may affect energy use, speed, and memory.",
+            "Can help reduce security exposure by lowering the number of installed system components.",
+            "Provides documentation through a wiki, including getting started, usage guidance, features, app replacements, and Android OEM behavior.",
+            "Does not collect or transmit user data beyond GitHub requests for package lists and update checks."
+          ],
+          "tags": [
+            "android",
+            "privacy",
+            "security"
+          ],
+          "summary_tokens_used": 2678,
+          "summary_status": "ok"
+        },
+        {
+          "title": "mattpocock / skills",
+          "description": "Skills for Real Engineers. Straight from my .claude directory.",
+          "url": "https://github.com/mattpocock/skills",
+          "summary": "Provides a collection of small, composable agent skills for software engineering workflows. Focuses on common coding-agent failure modes such as misalignment, verbosity, weak feedback loops, and poor codebase design. Includes skills for grilling requirements, writing PRDs, triaging issues, TDD, debugging, domain modeling, and architecture improvement. Supports setup across coding agents and can use GitHub, Linear, or local files for issue tracking.",
+          "summary_bullets": [
+            "Provides a collection of small, composable agent skills for software engineering workflows.",
+            "Focuses on common coding-agent failure modes such as misalignment, verbosity, weak feedback loops, and poor codebase design.",
+            "Includes skills for grilling requirements, writing PRDs, triaging issues, TDD, debugging, domain modeling, and architecture improvement.",
+            "Supports setup across coding agents and can use GitHub, Linear, or local files for issue tracking."
+          ],
+          "tags": [
+            "ai agent",
+            "developer tool",
+            "productivity"
+          ],
+          "summary_tokens_used": 4299,
+          "summary_status": "ok"
+        },
+        {
+          "title": "yairm210 / Unciv",
+          "description": "Open-source Android/Desktop remake of Civ V",
+          "url": "https://github.com/yairm210/Unciv",
+          "summary": "Open source remake of Civilization V for Android and desktop platforms. Provides a small, fast, moddable 4X strategy game intended to run on low-end hardware. Supports installation across Android, Linux, Windows, Raspberry Pi, and macOS. Includes in-game tutorial information and Civilopedia content for learning how to play. Welcomes contributions from programmers, translators, and modders through issues and pull requests.",
+          "summary_bullets": [
+            "Open source remake of Civilization V for Android and desktop platforms.",
+            "Provides a small, fast, moddable 4X strategy game intended to run on low-end hardware.",
+            "Supports installation across Android, Linux, Windows, Raspberry Pi, and macOS.",
+            "Includes in-game tutorial information and Civilopedia content for learning how to play.",
+            "Welcomes contributions from programmers, translators, and modders through issues and pull requests."
+          ],
+          "tags": [
+            "game",
+            "android"
+          ],
+          "summary_tokens_used": 3279,
+          "summary_status": "ok"
+        },
+        {
+          "title": "freeCodeCamp / freeCodeCamp",
+          "description": "freeCodeCamp.org's open-source codebase and curriculum. Learn math, programming, and computer science for free.",
+          "url": "https://github.com/freeCodeCamp/freeCodeCamp",
+          "summary": "Open-source codebase and curriculum for freeCodeCamp.org, a free platform for learning to code. Provides self-paced full-stack web development and machine learning curriculum with interactive coding challenges. Offers free developer and language certifications that include lessons, projects, quizzes, and exams. Supports learners through a forum, YouTube courses, technical articles, and a Discord community. Includes interview preparation resources and additional coding practice through related curricula.",
+          "summary_bullets": [
+            "Open-source codebase and curriculum for freeCodeCamp.org, a free platform for learning to code.",
+            "Provides self-paced full-stack web development and machine learning curriculum with interactive coding challenges.",
+            "Offers free developer and language certifications that include lessons, projects, quizzes, and exams.",
+            "Supports learners through a forum, YouTube courses, technical articles, and a Discord community.",
+            "Includes interview preparation resources and additional coding practice through related curricula."
+          ],
+          "tags": [
+            "education",
+            "developer tool",
+            "community"
+          ],
+          "summary_tokens_used": 3063,
+          "summary_status": "ok"
+        },
+        {
+          "title": "bytedance / UI-TARS-desktop",
+          "description": "The Open-Source Multimodal AI Agent Stack: Connecting Cutting-Edge AI Models and Agent Infra",
+          "url": "https://github.com/bytedance/UI-TARS-desktop",
+          "summary": "Provides a multimodal AI agent stack for controlling terminals, computers, browsers, and products with GUI and vision capabilities. Includes Agent TARS, which ships as a CLI and Web UI for human-like task completion using multimodal models and MCP tool integrations. Includes UI-TARS Desktop, a native desktop GUI agent for local and remote computer or browser operation. Supports natural-language control, screenshot-based visual recognition, precise mouse and keyboard actions, and real-time feedback. Targets users who want AI-assisted automation for desktop, browser, and tool-based workflows.",
+          "summary_bullets": [
+            "Provides a multimodal AI agent stack for controlling terminals, computers, browsers, and products with GUI and vision capabilities.",
+            "Includes Agent TARS, which ships as a CLI and Web UI for human-like task completion using multimodal models and MCP tool integrations.",
+            "Includes UI-TARS Desktop, a native desktop GUI agent for local and remote computer or browser operation.",
+            "Supports natural-language control, screenshot-based visual recognition, precise mouse and keyboard actions, and real-time feedback.",
+            "Targets users who want AI-assisted automation for desktop, browser, and tool-based workflows."
+          ],
+          "tags": [
+            "ai agent",
+            "automation",
+            "desktop",
+            "browser"
+          ],
+          "summary_tokens_used": 3815,
+          "summary_status": "ok"
+        },
+        {
+          "title": "nautechsystems / nautilus_trader",
+          "description": "Production-grade Rust-native trading engine with deterministic event-driven architecture",
+          "url": "https://github.com/nautechsystems/nautilus_trader",
+          "summary": "Open-source engine for building multi-asset, multi-venue trading systems across research, simulation, backtesting, and live execution. Uses a deterministic event-driven architecture so strategies can move from research to live deployment without code changes. Supports modular adapters for REST APIs and WebSocket feeds, with integrations for crypto exchanges, traditional markets, betting exchanges, brokers, and data providers. Provides backtesting across multiple venues, instruments, and strategies using historical tick, bar, order book, and custom data. Designed for individual and small-team quantitative traders focused on single-node backtesting and live trading.",
+          "summary_bullets": [
+            "Open-source engine for building multi-asset, multi-venue trading systems across research, simulation, backtesting, and live execution.",
+            "Uses a deterministic event-driven architecture so strategies can move from research to live deployment without code changes.",
+            "Supports modular adapters for REST APIs and WebSocket feeds, with integrations for crypto exchanges, traditional markets, betting exchanges, brokers, and data providers.",
+            "Provides backtesting across multiple venues, instruments, and strategies using historical tick, bar, order book, and custom data.",
+            "Designed for individual and small-team quantitative traders focused on single-node backtesting and live trading."
+          ],
+          "tags": [
+            "trading"
+          ],
+          "summary_tokens_used": 4845,
+          "summary_status": "ok"
+        }
+      ]
+    }
+  ],
+  "total_repositories": 16,
+  "total_summary_tokens_used": 60566
+}

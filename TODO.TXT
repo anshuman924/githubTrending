@@ -1,0 +1,9 @@
+TODO
+
+1. Add a service that can generate detailed code analysis for a selected repository.
+
+2. Add the generated report pages to GitHub Pages.
+
+3. Add GitHub Actions support for on-demand analytics requests.
+   - The analytics generation should still run on the local Linux system.
+   - After generation, the local system should push the updated output back to GitHub Pages.
