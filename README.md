@@ -2,13 +2,13 @@
 
 Generate a static GitHub Trending report with README-based summaries and tags.
 
-The scraper reads repositories from `https://github.com/trending`, fetches each repository README, summarizes the READMEs with `codex exec`, and writes static HTML and JSON files to `reports/`.
+The scraper reads repositories from `https://github.com/trending`, fetches each repository README, summarizes the READMEs with `codex exec`, and writes static HTML and JSON files to `docs/`.
 
 ## What It Produces
 
-- `reports/index.html` - archive page listing all generated reports
-- `reports/YYYY-MM-DD.html` - dated static report
-- `reports/YYYY-MM-DD.json` - dated report data
+- `docs/index.html` - archive page listing all generated reports
+- `docs/YYYY-MM-DD.html` - dated static report
+- `docs/YYYY-MM-DD.json` - dated report data
 
 The generated HTML is self-contained and can be published directly with GitHub Pages.
 
@@ -50,7 +50,7 @@ Generate a smaller report:
 .venv/bin/python scrape.py --limit 5
 ```
 
-The command prints the report JSON and writes the static files into `reports/`.
+The command prints the report JSON and writes the static files into `docs/`.
 
 ## Summarization
 
@@ -77,18 +77,18 @@ CODEX_TIMEOUT = 600
 
 ## Publish With GitHub Pages
 
-Because the generated site lives in `reports/`, GitHub Pages can serve it directly.
+Because the generated site lives in `docs/`, GitHub Pages can serve it directly.
 
 1. Add a `.nojekyll` file:
 
 ```bash
-touch reports/.nojekyll
+touch docs/.nojekyll
 ```
 
 2. Commit and push the generated files:
 
 ```bash
-git add reports README.md
+git add docs README.md
 git commit -m "Publish static trending report"
 git push
 ```
@@ -104,7 +104,7 @@ Settings -> Pages -> Build and deployment
 ```text
 Source: Deploy from a branch
 Branch: main
-Folder: /reports
+Folder: /docs
 ```
 
 After GitHub Pages finishes publishing, the site should be available at:
@@ -126,7 +126,7 @@ github_scraper.py   Fetches GitHub Trending and repository README content.
 summarizer.py       Batches README content and asks Codex for summaries/tags.
 html_report.py      Renders the static HTML report.
 scrape.py           Main CLI entrypoint for generating reports.
-reports/            Generated static HTML and JSON output.
+docs/               Generated static HTML and JSON output for GitHub Pages.
 requirements.txt    Python dependencies.
 TODO.TXT            Planned follow-up work.
 ```

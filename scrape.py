@@ -9,7 +9,7 @@ from summarizer import summarize_readmes
 
 
 DEFAULT_LIMIT = 16
-REPORTS_DIR = Path('reports')
+REPORTS_DIR = Path('docs')
 
 
 def build_report(limit=DEFAULT_LIMIT):
