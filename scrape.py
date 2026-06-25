@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import json
+import subprocess
 from pathlib import Path
 
 from github_scraper import fetch_readme, fetch_trending
@@ -10,6 +11,8 @@ from summarizer import summarize_readmes
 
 DEFAULT_LIMIT = 16
 REPORTS_DIR = Path('docs')
+PUBLISH_REMOTE = 'origin'
+PUBLISH_BRANCH = 'main'
 
 
 def build_report(limit=DEFAULT_LIMIT):
@@ -87,13 +90,41 @@ def write_report(report, output_dir=REPORTS_DIR):
     return dated_path
 
 
+def publish_generated_files(report_date, output_dir=REPORTS_DIR):
+    run_git(['add', str(output_dir)])
+
+    if not staged_changes_exist(output_dir):
+        return False
+
+    run_git(['commit', '-m', 'Update GitHub Trending report for {date}'.format(date=report_date), '--', str(output_dir)])
+    run_git(['push', PUBLISH_REMOTE, PUBLISH_BRANCH])
+    return True
+
+
+def staged_changes_exist(output_dir=REPORTS_DIR):
+    result = subprocess.run(
+        ['git', 'diff', '--cached', '--quiet', '--', str(output_dir)],
+        text=True,
+    )
+    if result.returncode in (0, 1):
+        return result.returncode == 1
+
+    result.check_returncode()
+
+
+def run_git(args):
+    subprocess.run(['git'] + args, check=True)
+
+
 def current_date():
     return datetime.datetime.now().strftime('%Y-%m-%d')
 
 
-def job(limit=DEFAULT_LIMIT):
+def job(limit=DEFAULT_LIMIT, push=True):
     report = build_report(limit=limit)
     write_report(report)
+    if push:
+        publish_generated_files(report['date'])
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return report
 
@@ -106,9 +137,14 @@ def parse_args():
         default=DEFAULT_LIMIT,
         help='Maximum repositories to summarize from https://github.com/trending. Defaults to 16.',
     )
+    parser.add_argument(
+        '--no-push',
+        action='store_true',
+        help='Generate files without committing and pushing docs/ to GitHub.',
+    )
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_args()
-    job(limit=args.limit)
+    job(limit=args.limit, push=not args.no_push)

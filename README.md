@@ -51,6 +51,13 @@ Generate a smaller report:
 ```
 
 The command prints the report JSON and writes the static files into `docs/`.
+After a successful run, it commits changed files in `docs/` and pushes them to GitHub.
+
+Generate without pushing:
+
+```bash
+.venv/bin/python scrape.py --no-push
+```
 
 ## Summarization
 
@@ -118,6 +125,8 @@ The homepage lists all generated reports. Each report is available at:
 ```text
 https://<username>.github.io/<repo-name>/YYYY-MM-DD.html
 ```
+
+After GitHub Pages is configured, each successful `scrape.py` run updates `docs/`, commits the generated files, and pushes to `origin main`. Use `--no-push` when testing locally.
 
 ## Project Structure
 
