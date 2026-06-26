@@ -6,6 +6,7 @@ from pathlib import Path
 
 from github_scraper import fetch_readme, fetch_trending
 from html_report import load_dated_reports, render_index_html, render_report_html
+from language_filter import should_skip_non_english_readme
 from summarizer import summarize_readmes
 
 
@@ -43,9 +44,10 @@ def scrape_trending(limit=DEFAULT_LIMIT):
     if limit is not None:
         repositories = repositories[:limit]
 
+    report_repositories = []
     readme_items = []
 
-    for index, repo in enumerate(repositories):
+    for repo in repositories:
         try:
             readme = fetch_readme(repo['url'])
         except Exception as error:
@@ -54,9 +56,15 @@ def scrape_trending(limit=DEFAULT_LIMIT):
             repo['tags'] = []
             repo['summary_tokens_used'] = 0
             repo['summary_status'] = 'readme_fetch_failed'
+            report_repositories.append(repo)
         else:
+            if should_skip_non_english_readme(readme):
+                continue
+
+            report_index = len(report_repositories)
+            report_repositories.append(repo)
             readme_items.append({
-                'index': index,
+                'index': report_index,
                 'title': repo['title'],
                 'url': repo['url'],
                 'readme': readme,
@@ -64,14 +72,14 @@ def scrape_trending(limit=DEFAULT_LIMIT):
 
     summaries = summarize_readmes(readme_items)
     for item, result in zip(readme_items, summaries):
-        repo = repositories[item['index']]
+        repo = report_repositories[item['index']]
         repo['summary'] = result['summary']
         repo['summary_bullets'] = result.get('summary_bullets', [result['summary']])
         repo['tags'] = result.get('tags', [])
         repo['summary_tokens_used'] = result['tokens_used']
         repo['summary_status'] = result['status']
 
-    return repositories
+    return report_repositories
 
 
 def write_report(report, output_dir=REPORTS_DIR):

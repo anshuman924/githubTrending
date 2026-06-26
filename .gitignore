@@ -2,3 +2,4 @@
 .playwright*
 .venv/
 timer*
+LINUX*
