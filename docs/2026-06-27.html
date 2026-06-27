@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Trending Report</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #19181a;
+      --panel: #221f22;
+      --panel-strong: #2d2a2e;
+      --text: #fcfcfa;
+      --muted: #c1c0c0;
+      --border: #403e41;
+      --accent: #ffd866;
+      --accent-strong: #ff6188;
+      --accent-soft: rgba(255, 216, 102, 0.14);
+      --green: #a9dc76;
+      --cyan: #78dce8;
+      --purple: #ab9df2;
+      --warn: #fc9867;
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    header {
+      background: linear-gradient(180deg, #2d2a2e 0%, #221f22 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 20px;
+    }
+
+    .topbar {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .title-block {
+      display: grid;
+      gap: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      color: var(--accent);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .sidebar-toggle {
+      width: 42px;
+      min-height: 42px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    .sidebar-toggle span,
+    .sidebar-toggle::before,
+    .sidebar-toggle::after {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .sidebar-toggle {
+      gap: 4px;
+    }
+
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    body.sidebar-collapsed .layout {
+      grid-template-columns: minmax(0, 1fr) 0;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 16px;
+      overflow: hidden;
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease;
+    }
+
+    body.sidebar-collapsed .sidebar {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(12px);
+    }
+
+    .filters {
+      display: grid;
+      gap: 8px;
+    }
+
+    button {
+      min-height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      padding: 7px 12px;
+    }
+
+    button[aria-pressed="true"] {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+      color: #19181a;
+      font-weight: 700;
+    }
+
+    .filters button {
+      width: 100%;
+      text-align: left;
+    }
+
+    .grid {
+      position: relative;
+      min-height: 220px;
+      transition: height 260ms ease;
+    }
+
+    .tile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 320ms ease;
+    }
+
+    .tile.expanded {
+      border-color: rgba(255, 216, 102, 0.48);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+    }
+
+    .tile-toggle {
+      width: 100%;
+      min-height: 160px;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto;
+      gap: 10px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      padding: 14px;
+    }
+
+    .tile-toggle:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: -3px;
+    }
+
+    .repo-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 700;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+      color: var(--text);
+    }
+
+    .repo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 24px;
+    }
+
+    .tag {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: rgba(120, 220, 232, 0.16);
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      text-transform: lowercase;
+    }
+
+    .description {
+      margin: 0;
+      color: var(--muted);
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .tile-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-ok {
+      color: var(--green);
+    }
+
+    .status-failed,
+    .status-readme_fetch_failed,
+    .status-skipped,
+    .status-stale_codex_exec_terminated {
+      color: var(--warn);
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      border-top: 0 solid transparent;
+      background: var(--panel-strong);
+      opacity: 0;
+      padding: 0 14px;
+      transition:
+        max-height 320ms ease,
+        opacity 180ms ease,
+        padding 320ms ease,
+        border-color 320ms ease,
+        border-width 320ms ease;
+    }
+
+    .tile.expanded .details {
+      border-top-width: 1px;
+      border-top-color: var(--border);
+      opacity: 1;
+      padding: 14px;
+    }
+
+    .summary-list {
+      margin: 0 0 12px;
+      padding-left: 20px;
+      color: var(--text);
+    }
+
+    .summary-list li {
+      margin: 0 0 8px;
+    }
+
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid rgba(171, 157, 242, 0.42);
+      border-radius: 8px;
+      background: rgba(171, 157, 242, 0.12);
+      color: var(--purple);
+      font-weight: 600;
+      padding: 7px 12px;
+      text-decoration: none;
+    }
+
+    .repo-link:hover {
+      border-color: var(--purple);
+      background: rgba(171, 157, 242, 0.18);
+    }
+
+    .empty {
+      position: static;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--muted);
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      header {
+        padding: 16px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr) 190px;
+        padding: 14px;
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .tile-toggle {
+        min-height: 140px;
+      }
+
+      .repo-title {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="title-block">
+        <h1>GitHub Trending Report</h1>
+        <div class="meta" id="meta"></div>
+      </div>
+      <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle tag filters" aria-expanded="true"><span></span></button>
+    </div>
+  </header>
+  <main class="layout">
+    <section class="content">
+      <section class="grid" id="repoGrid" aria-live="polite"></section>
+    </section>
+    <aside class="sidebar" id="sidebar">
+      <nav class="filters" id="filters" aria-label="Tag filters"></nav>
+    </aside>
+  </main>
+
+  <script>
+    const report = {"date": "2026-06-27", "languages": [{"name": "trending", "repository_count": 13, "summary_tokens_used": 36814, "repositories": [{"title": "simplex-chat / simplex-chat", "description": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!", "url": "https://github.com/simplex-chat/simplex-chat", "summary": "Private messaging app built to avoid user identifiers and protect identity, contacts, and metadata. Uses end-to-end encryption with an extra encryption layer for message security. Provides mobile apps for Android and iOS, plus a terminal app for Linux, macOS, and Windows. Supports private one-to-one connections through invitation links or QR codes. Includes user groups, translation help, developer contact, and self-hostable network options.", "summary_bullets": ["Private messaging app built to avoid user identifiers and protect identity, contacts, and metadata.", "Uses end-to-end encryption with an extra encryption layer for message security.", "Provides mobile apps for Android and iOS, plus a terminal app for Linux, macOS, and Windows.", "Supports private one-to-one connections through invitation links or QR codes.", "Includes user groups, translation help, developer contact, and self-hostable network options."], "tags": ["messaging", "privacy", "security", "collaboration"], "summary_tokens_used": 3977, "summary_status": "ok"}, {"title": "google-labs-code / design.md", "description": "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.", "url": "https://github.com/google-labs-code/design.md", "summary": "Defines a DESIGN.md format for describing a visual identity in a way coding agents can use reliably. Combines structured design tokens with prose so agents have both exact values and usage guidance. Includes linting and diff tools to validate token references, contrast, and structural issues. Supports exporting tokens to other design systems and formats. Aims to help teams keep design systems consistent across agent-driven UI work.", "summary_bullets": ["Defines a DESIGN.md format for describing a visual identity in a way coding agents can use reliably.", "Combines structured design tokens with prose so agents have both exact values and usage guidance.", "Includes linting and diff tools to validate token references, contrast, and structural issues.", "Supports exporting tokens to other design systems and formats.", "Aims to help teams keep design systems consistent across agent-driven UI work."], "tags": ["design tool", "developer tool", "ui", "documentation"], "summary_tokens_used": 3433, "summary_status": "ok"}, {"title": "commaai / openpilot", "description": "openpilot is an operating system for robotics. Currently, it upgrades the driver assistance system on 300+ supported cars.", "url": "https://github.com/commaai/openpilot", "summary": "Openpilot is an operating system for robotics that upgrades driver assistance in supported cars. Used with a comma four device and car harness to enable the car integration. Supports 300+ cars and offers release, staging, nightly, and experimental branches. Includes documentation, community resources, and tools for contributing to the project. Covers safety, testing, and data collection policies for vehicle use.", "summary_bullets": ["Openpilot is an operating system for robotics that upgrades driver assistance in supported cars.", "Used with a comma four device and car harness to enable the car integration.", "Supports 300+ cars and offers release, staging, nightly, and experimental branches.", "Includes documentation, community resources, and tools for contributing to the project.", "Covers safety, testing, and data collection policies for vehicle use."], "tags": ["automotive", "robotics", "driver assistance", "developer tool"], "summary_tokens_used": 1403, "summary_status": "ok"}, {"title": "kunchenguid / no-mistakes", "description": "git push no-mistakes", "url": "https://github.com/kunchenguid/no-mistakes", "summary": "Local git proxy that gates pushes through automated validation before forwarding to the real remote. Creates a disposable worktree so checks run without disturbing the developer's branch. Can run review, test, docs, lint, push, PR, and CI steps in one pipeline. Supports multiple AI agents and can apply safe fixes automatically while escalating judgment calls. Designed to produce clean pull requests with less manual release overhead.", "summary_bullets": ["Local git proxy that gates pushes through automated validation before forwarding to the real remote.", "Creates a disposable worktree so checks run without disturbing the developer's branch.", "Can run review, test, docs, lint, push, PR, and CI steps in one pipeline.", "Supports multiple AI agents and can apply safe fixes automatically while escalating judgment calls.", "Designed to produce clean pull requests with less manual release overhead."], "tags": ["developer tool", "git", "code review", "automation"], "summary_tokens_used": 1496, "summary_status": "ok"}, {"title": "grafana / grafana", "description": "The open and composable observability and data visualization platform. Visualize metrics, logs, and traces from multiple sources like Prometheus, Loki, Elasticsearch, InfluxDB, Postgres and many more.", "url": "https://github.com/grafana/grafana", "summary": "Open-source monitoring and observability platform for querying, visualizing, alerting on, and understanding metrics. Lets teams build dashboards, explore metrics and logs, and compare data sources side by side. Includes alerting workflows that notify external systems when rules trigger. Supports mixed data sources and reusable dashboards with template variables. Targets operators and teams that need a central interface for system visibility.", "summary_bullets": ["Open-source monitoring and observability platform for querying, visualizing, alerting on, and understanding metrics.", "Lets teams build dashboards, explore metrics and logs, and compare data sources side by side.", "Includes alerting workflows that notify external systems when rules trigger.", "Supports mixed data sources and reusable dashboards with template variables.", "Targets operators and teams that need a central interface for system visibility."], "tags": ["monitoring", "observability", "dashboard", "developer tool"], "summary_tokens_used": 698, "summary_status": "ok"}, {"title": "ripienaar / free-for-dev", "description": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev", "url": "https://github.com/ripienaar/free-for-dev", "summary": "Curated list of services that offer free tiers for developers and open source teams. Focuses on infrastructure-related tools such as hosting, databases, CI, monitoring, and security. Organized by category with notes about limits and eligibility for each service. Community-maintained through pull requests and reviews from many contributors. Helps developers compare free options without spending time searching across providers.", "summary_bullets": ["Curated list of services that offer free tiers for developers and open source teams.", "Focuses on infrastructure-related tools such as hosting, databases, CI, monitoring, and security.", "Organized by category with notes about limits and eligibility for each service.", "Community-maintained through pull requests and reviews from many contributors.", "Helps developers compare free options without spending time searching across providers."], "tags": ["developer tool", "resources", "cloud", "reference"], "summary_tokens_used": 3977, "summary_status": "ok"}, {"title": "opendatalab / MinerU", "description": "Transforms complex documents like PDFs and Office docs into LLM-ready markdown/JSON for your Agentic workflows.", "url": "https://github.com/opendatalab/MinerU", "summary": "Document parsing engine that converts PDFs, DOCX, PPTX, XLSX, images, and web pages into structured Markdown or JSON. Built for LLM, RAG, and agent workflows that need clean document extraction. Uses OCR plus vision-language parsing to handle scanned documents, tables, formulas, and complex layouts. Offers web, desktop, API, CLI, SDK, and MCP integration options. Supports multilingual parsing and private offline deployment for controlled environments.", "summary_bullets": ["Document parsing engine that converts PDFs, DOCX, PPTX, XLSX, images, and web pages into structured Markdown or JSON.", "Built for LLM, RAG, and agent workflows that need clean document extraction.", "Uses OCR plus vision-language parsing to handle scanned documents, tables, formulas, and complex layouts.", "Offers web, desktop, API, CLI, SDK, and MCP integration options.", "Supports multilingual parsing and private offline deployment for controlled environments."], "tags": ["document processing", "ai tools", "developer tool", "data extraction"], "summary_tokens_used": 3977, "summary_status": "ok"}, {"title": "mauriceboe / TREK", "description": "A self-hosted travel/trip planner with real-time collaboration, interactive maps, PWA support, SSO, budgets, packing lists, and more.", "url": "https://github.com/mauriceboe/TREK", "summary": "Self-hosted collaborative travel planner with maps, budgets, packing lists, notes, and AI features. Helps users plan trips day by day, manage reservations, and track expenses across currencies. Supports real-time collaboration, shared access controls, and invite links for multi-user trips. Includes mobile-friendly PWA support, offline caching, and installable browser app behavior. Extends travel planning with addons like journaling, country tracking, and flight import.", "summary_bullets": ["Self-hosted collaborative travel planner with maps, budgets, packing lists, notes, and AI features.", "Helps users plan trips day by day, manage reservations, and track expenses across currencies.", "Supports real-time collaboration, shared access controls, and invite links for multi-user trips.", "Includes mobile-friendly PWA support, offline caching, and installable browser app behavior.", "Extends travel planning with addons like journaling, country tracking, and flight import."], "tags": ["travel", "collaboration", "planning", "productivity"], "summary_tokens_used": 3977, "summary_status": "ok"}, {"title": "calesthio / OpenMontage", "description": "World's first open-source, agentic video production system. 12 pipelines, 52 tools, 500+ agent skills. Turn your AI coding assistant into a full video production studio.", "url": "https://github.com/calesthio/OpenMontage", "summary": "Agentic video production system that turns prompts into finished videos through automated pipelines. Can research topics, write scripts, generate assets, edit timelines, and render final compositions. Supports both image-based videos and real-footage documentary-style workflows. Works with multiple providers and can run with free/open-source tools for narration, footage, and rendering. Aims at creators who want AI-assisted video production with explicit review and reproducibility.", "summary_bullets": ["Agentic video production system that turns prompts into finished videos through automated pipelines.", "Can research topics, write scripts, generate assets, edit timelines, and render final compositions.", "Supports both image-based videos and real-footage documentary-style workflows.", "Works with multiple providers and can run with free/open-source tools for narration, footage, and rendering.", "Aims at creators who want AI-assisted video production with explicit review and reproducibility."], "tags": ["video production", "ai tools", "content creation", "media"], "summary_tokens_used": 3977, "summary_status": "ok"}, {"title": "aws / agent-toolkit-for-aws", "description": "Official, AWS-supported MCP servers, skills, and plugins to help AI agents build on AWS", "url": "https://github.com/aws/agent-toolkit-for-aws", "summary": "Toolkit for helping AI coding agents build, deploy, and manage applications on AWS. Provides plugins, skills, and MCP server configuration for common AWS workflows. Covers service selection, infrastructure, serverless apps, containers, storage, observability, and billing. Includes dedicated support for agent-building and devsecops tasks on AWS. Designed to work with agents such as Codex, Claude Code, and Cursor.", "summary_bullets": ["Toolkit for helping AI coding agents build, deploy, and manage applications on AWS.", "Provides plugins, skills, and MCP server configuration for common AWS workflows.", "Covers service selection, infrastructure, serverless apps, containers, storage, observability, and billing.", "Includes dedicated support for agent-building and devsecops tasks on AWS.", "Designed to work with agents such as Codex, Claude Code, and Cursor."], "tags": ["cloud", "developer tool", "ai agents", "devops"], "summary_tokens_used": 2372, "summary_status": "ok"}, {"title": "garrytan / gstack", "description": "Use Garry Tan's exact Claude Code setup: 23 opinionated tools that serve as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA", "url": "https://github.com/garrytan/gstack", "summary": "Collection of slash-command skills that turns Claude Code into a structured virtual engineering team. Covers planning, design review, code review, QA, shipping, investigation, and release workflows. Aims to help founders, leads, and engineers ship with more process and less prompt improvisation. Includes host setup support for multiple AI coding agents and project-level onboarding. Organizes product and engineering work into repeatable review-and-deliver steps.", "summary_bullets": ["Collection of slash-command skills that turns Claude Code into a structured virtual engineering team.", "Covers planning, design review, code review, QA, shipping, investigation, and release workflows.", "Aims to help founders, leads, and engineers ship with more process and less prompt improvisation.", "Includes host setup support for multiple AI coding agents and project-level onboarding.", "Organizes product and engineering work into repeatable review-and-deliver steps."], "tags": ["developer tool", "ai agents", "code review", "productivity"], "summary_tokens_used": 3976, "summary_status": "ok"}, {"title": "IceWhaleTech / CasaOS", "description": "CasaOS - A simple, easy-to-use, elegant open-source Personal Cloud system.", "url": "https://github.com/IceWhaleTech/CasaOS", "summary": "Personal cloud platform for home and small-organization use, focused on local data ownership and autonomy. Provides a friendly UI for managing files, drives, system widgets, and installed apps. Supports one-click installation of common home server apps like media, security, and automation tools. Runs on a wide range of hardware including Raspberry Pi, NUC, and older computers. Targets users who want a low-cost self-hosted alternative to consumer cloud services.", "summary_bullets": ["Personal cloud platform for home and small-organization use, focused on local data ownership and autonomy.", "Provides a friendly UI for managing files, drives, system widgets, and installed apps.", "Supports one-click installation of common home server apps like media, security, and automation tools.", "Runs on a wide range of hardware including Raspberry Pi, NUC, and older computers.", "Targets users who want a low-cost self-hosted alternative to consumer cloud services."], "tags": ["self-hosting", "home server", "cloud", "storage"], "summary_tokens_used": 1740, "summary_status": "ok"}, {"title": "JCodesMore / ai-website-cloner-template", "description": "Clone any website with one command using AI coding agents", "url": "https://github.com/JCodesMore/ai-website-cloner-template", "summary": "Template for reverse-engineering a website into a modern Next.js codebase with AI coding agents. Runs a `/clone-website` workflow that extracts design tokens, assets, and component specs from target sites. Dispatches parallel builders to reconstruct pages and then compares the result with the source. Intended for site migration, code recovery, and learning from production UI implementations. Includes setup, agent instructions, and support for several coding assistants.", "summary_bullets": ["Template for reverse-engineering a website into a modern Next.js codebase with AI coding agents.", "Runs a `/clone-website` workflow that extracts design tokens, assets, and component specs from target sites.", "Dispatches parallel builders to reconstruct pages and then compares the result with the source.", "Intended for site migration, code recovery, and learning from production UI implementations.", "Includes setup, agent instructions, and support for several coding assistants."], "tags": ["web development", "developer tool", "design tool", "automation"], "summary_tokens_used": 1811, "summary_status": "ok"}]}], "total_repositories": 13, "total_summary_tokens_used": 36814};
+    const state = {
+      report,
+      activeTag: 'all',
+    };
+
+    const meta = document.getElementById('meta');
+    const filters = document.getElementById('filters');
+    const repoGrid = document.getElementById('repoGrid');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    let tileObserver = null;
+
+    sidebarToggle.addEventListener('click', () => {
+      const collapsed = document.body.classList.toggle('sidebar-collapsed');
+      sidebarToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      layoutTilesSoon();
+    });
+
+    render();
+
+    function render() {
+      renderMeta();
+      renderFilters();
+      renderRepos();
+    }
+
+    function renderMeta() {
+      meta.innerHTML = [
+        `<span>Date: ${escapeHtml(state.report.date)}</span>`,
+        `<span>Repos: ${state.report.total_repositories}</span>`,
+        `<span>Summary tokens: ${state.report.total_summary_tokens_used}</span>`,
+      ].join('');
+    }
+
+    function renderFilters() {
+      const repos = flattenRepos();
+      const tags = sortedTagsByFrequency(repos);
+      const buttons = ['all', ...tags].map((tag) => {
+        const label = tag === 'all' ? 'All' : `${tag} ${tagCount(repos, tag)}`;
+        const pressed = state.activeTag === tag ? 'true' : 'false';
+        return `<button type="button" aria-pressed="${pressed}" data-tag="${escapeAttribute(tag)}">${escapeHtml(label)}</button>`;
+      });
+
+      filters.innerHTML = buttons.join('');
+      filters.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => {
+          state.activeTag = button.dataset.tag;
+          render();
+        });
+      });
+    }
+
+    function renderRepos() {
+      const repos = flattenRepos().filter((repo) => {
+        return state.activeTag === 'all' || repoTags(repo).includes(state.activeTag);
+      });
+
+      if (!repos.length) {
+        repoGrid.innerHTML = '<div class="empty">No repositories for this filter.</div>';
+        repoGrid.style.height = 'auto';
+        return;
+      }
+
+      repoGrid.innerHTML = repos.map(renderRepo).join('');
+      observeTileSizes();
+      repoGrid.querySelectorAll('.tile-toggle').forEach((button) => {
+        button.addEventListener('click', () => {
+          const tile = button.closest('.tile');
+          const wasExpanded = tile.classList.contains('expanded');
+
+          if (wasExpanded) {
+            closeExpandedTile();
+            layoutTilesSoon();
+            return;
+          }
+
+          closeExpandedTile();
+          tile.classList.add('expanded');
+          button.setAttribute('aria-expanded', 'true');
+          setDetailsHeight(tile);
+          layoutTilesSoon();
+        });
+      });
+      layoutTilesSoon();
+    }
+
+    function closeExpandedTile() {
+      repoGrid.querySelectorAll('.tile.expanded').forEach((tile) => {
+        tile.classList.remove('expanded');
+        const details = tile.querySelector('.details');
+        if (details) {
+          details.style.maxHeight = '0px';
+        }
+        const button = tile.querySelector('.tile-toggle');
+        if (button) {
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    function setDetailsHeight(tile) {
+      const details = tile.querySelector('.details');
+      if (details) {
+        details.style.maxHeight = `${details.scrollHeight + 160}px`;
+      }
+    }
+
+    function observeTileSizes() {
+      if (tileObserver) {
+        tileObserver.disconnect();
+      }
+
+      tileObserver = new ResizeObserver(() => layoutTilesSoon());
+      repoGrid.querySelectorAll('.tile').forEach((tile) => tileObserver.observe(tile));
+    }
+
+    function layoutTilesSoon() {
+      requestAnimationFrame(layoutTiles);
+    }
+
+    function layoutTiles() {
+      const tiles = [...repoGrid.querySelectorAll('.tile')];
+      if (!tiles.length) {
+        return;
+      }
+
+      const gap = 14;
+      const minColumnWidth = 280;
+      const containerWidth = repoGrid.clientWidth;
+      const columns = Math.max(1, Math.floor((containerWidth + gap) / (minColumnWidth + gap)));
+      const columnWidth = (containerWidth - gap * (columns - 1)) / columns;
+      const columnHeights = Array(columns).fill(0);
+
+      tiles.forEach((tile) => {
+        tile.style.width = `${columnWidth}px`;
+        const column = columnHeights.indexOf(Math.min(...columnHeights));
+        const x = column * (columnWidth + gap);
+        const y = columnHeights[column];
+
+        tile.style.transform = `translate(${x}px, ${y}px)`;
+        columnHeights[column] += tile.offsetHeight + gap;
+      });
+
+      repoGrid.style.height = `${Math.max(...columnHeights) - gap}px`;
+    }
+
+    window.addEventListener('resize', layoutTilesSoon);
+
+    function sortedTagsByFrequency(repos) {
+      const counts = new Map();
+      repos.forEach((repo) => {
+        repoTags(repo).forEach((tag) => {
+          counts.set(tag, (counts.get(tag) || 0) + 1);
+        });
+      });
+
+      return [...counts.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([tag]) => tag);
+    }
+
+    function tagCount(repos, tag) {
+      return repos.filter((repo) => repoTags(repo).includes(tag)).length;
+    }
+
+    function repoTags(repo) {
+      return Array.isArray(repo.tags) ? repo.tags.slice(0, 5) : [];
+    }
+
+    function repoBullets(repo) {
+      if (Array.isArray(repo.summary_bullets) && repo.summary_bullets.length) {
+        return repo.summary_bullets;
+      }
+
+      return [repo.summary || 'Summary unavailable.'];
+    }
+
+    function flattenRepos() {
+      return state.report.languages.flatMap((language) => {
+        return language.repositories.map((repo) => ({ ...repo }));
+      });
+    }
+
+    function renderRepo(repo) {
+      const statusClass = `status-${repo.summary_status}`;
+      const tags = repoTags(repo);
+      const tagHtml = tags.length
+        ? tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('')
+        : '<span class="tag">untagged</span>';
+      const bullets = repoBullets(repo)
+        .map((bullet) => `<li>${escapeHtml(bullet)}</li>`)
+        .join('');
+
+      return `
+        <article class="tile">
+          <button type="button" class="tile-toggle" aria-expanded="false">
+            <div class="repo-title">
+              <span>${escapeHtml(repo.title)}</span>
+            </div>
+            <p class="description">${escapeHtml(repo.description || 'No description provided.')}</p>
+            <div class="repo-tags">${tagHtml}</div>
+            <div class="tile-footer">
+              <span class="${escapeHtml(statusClass)}">${escapeHtml(repo.summary_status)}</span>
+              <span>${repo.summary_tokens_used} tokens</span>
+            </div>
+          </button>
+          <div class="details">
+            <ul class="summary-list">${bullets}</ul>
+            <a class="repo-link" href="${escapeAttribute(repo.url)}" target="_blank" rel="noopener">Open repository</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value).replace(/`/g, '&#96;');
+    }
+  </script>
+</body>
+</html>
