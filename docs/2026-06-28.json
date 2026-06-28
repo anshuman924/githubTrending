@@ -1,0 +1,295 @@
+{
+  "date": "2026-06-28",
+  "languages": [
+    {
+      "name": "trending",
+      "repository_count": 14,
+      "summary_tokens_used": 39289,
+      "repositories": [
+        {
+          "title": "simplex-chat / simplex-chat",
+          "description": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!",
+          "url": "https://github.com/simplex-chat/simplex-chat",
+          "summary": "Private messaging app built around having no user identifiers or persistent contact identifiers. Uses end-to-end encryption plus extra message encryption to protect messages and metadata. Provides mobile apps for Android and iOS, plus a terminal/CLI client for desktop operating systems. Supports private one-to-one connections, user groups, translations, and community updates.",
+          "summary_bullets": [
+            "Private messaging app built around having no user identifiers or persistent contact identifiers.",
+            "Uses end-to-end encryption plus extra message encryption to protect messages and metadata.",
+            "Provides mobile apps for Android and iOS, plus a terminal/CLI client for desktop operating systems.",
+            "Supports private one-to-one connections, user groups, translations, and community updates."
+          ],
+          "tags": [
+            "messaging",
+            "privacy",
+            "security",
+            "collaboration"
+          ],
+          "summary_tokens_used": 3943,
+          "summary_status": "ok"
+        },
+        {
+          "title": "commaai / openpilot",
+          "description": "openpilot is an operating system for robotics. Currently, it upgrades the driver assistance system on 300+ supported cars.",
+          "url": "https://github.com/commaai/openpilot",
+          "summary": "Operating system for robotics that upgrades driver assistance in 300+ supported cars. Designed to run on a comma four device paired with a supported car and harness. Includes safety testing, documentation, and community contribution guidance. Open source software for advanced vehicle assistance rather than a consumer product.",
+          "summary_bullets": [
+            "Operating system for robotics that upgrades driver assistance in 300+ supported cars.",
+            "Designed to run on a comma four device paired with a supported car and harness.",
+            "Includes safety testing, documentation, and community contribution guidance.",
+            "Open source software for advanced vehicle assistance rather than a consumer product."
+          ],
+          "tags": [
+            "robotics",
+            "automotive",
+            "driver assistance",
+            "open source"
+          ],
+          "summary_tokens_used": 1390,
+          "summary_status": "ok"
+        },
+        {
+          "title": "IceWhaleTech / CasaOS",
+          "description": "CasaOS - A simple, easy-to-use, elegant open-source Personal Cloud system.",
+          "url": "https://github.com/IceWhaleTech/CasaOS",
+          "summary": "Personal cloud platform for home and small-organization data storage and app management. Focuses on low-cost, self-hosted data ownership instead of relying on SaaS. Offers a friendly home-oriented UI, drive management, widgets, and one-click app installs. Supports common hardware like Raspberry Pi, NUCs, and other small servers.",
+          "summary_bullets": [
+            "Personal cloud platform for home and small-organization data storage and app management.",
+            "Focuses on low-cost, self-hosted data ownership instead of relying on SaaS.",
+            "Offers a friendly home-oriented UI, drive management, widgets, and one-click app installs.",
+            "Supports common hardware like Raspberry Pi, NUCs, and other small servers."
+          ],
+          "tags": [
+            "personal cloud",
+            "home server",
+            "storage",
+            "self-hosting",
+            "collaboration"
+          ],
+          "summary_tokens_used": 1726,
+          "summary_status": "ok"
+        },
+        {
+          "title": "ripienaar / free-for-dev",
+          "description": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev",
+          "url": "https://github.com/ripienaar/free-for-dev",
+          "summary": "Curated list of services that offer free developer tiers across cloud and infrastructure categories. Helps developers compare free plans for hosting, databases, CI/CD, monitoring, and more. Targets infrastructure developers and DevOps users rather than general consumer software. Community-maintained through pull requests and reviews as offerings change over time.",
+          "summary_bullets": [
+            "Curated list of services that offer free developer tiers across cloud and infrastructure categories.",
+            "Helps developers compare free plans for hosting, databases, CI/CD, monitoring, and more.",
+            "Targets infrastructure developers and DevOps users rather than general consumer software.",
+            "Community-maintained through pull requests and reviews as offerings change over time."
+          ],
+          "tags": [
+            "developer resource",
+            "cloud",
+            "infrastructure",
+            "productivity"
+          ],
+          "summary_tokens_used": 3943,
+          "summary_status": "ok"
+        },
+        {
+          "title": "google-labs-code / design.md",
+          "description": "A format specification for describing a visual identity to coding agents. DESIGN.md gives agents a persistent, structured understanding of a design system.",
+          "url": "https://github.com/google-labs-code/design.md",
+          "summary": "Specification for describing a visual identity in a format readable by coding agents. Combines machine-readable design tokens with human-readable design rationale. Includes tooling to lint, diff, and export DESIGN.md files into other token formats. Aims to give agents persistent, structured guidance for UI design systems.",
+          "summary_bullets": [
+            "Specification for describing a visual identity in a format readable by coding agents.",
+            "Combines machine-readable design tokens with human-readable design rationale.",
+            "Includes tooling to lint, diff, and export DESIGN.md files into other token formats.",
+            "Aims to give agents persistent, structured guidance for UI design systems."
+          ],
+          "tags": [
+            "design tool",
+            "developer tool",
+            "ui design",
+            "documentation"
+          ],
+          "summary_tokens_used": 3402,
+          "summary_status": "ok"
+        },
+        {
+          "title": "microsoft / PowerToys",
+          "description": "Microsoft PowerToys is a collection of utilities that supercharge productivity and customization on Windows",
+          "url": "https://github.com/microsoft/PowerToys",
+          "summary": "Collection of Windows utilities that customize the OS and streamline everyday tasks. Includes tools for window management, keyboard and mouse control, file handling, and text extraction. Built for power users who want more control over Windows workflows. Provides installation options through GitHub, Microsoft Store, and WinGet.",
+          "summary_bullets": [
+            "Collection of Windows utilities that customize the OS and streamline everyday tasks.",
+            "Includes tools for window management, keyboard and mouse control, file handling, and text extraction.",
+            "Built for power users who want more control over Windows workflows.",
+            "Provides installation options through GitHub, Microsoft Store, and WinGet."
+          ],
+          "tags": [
+            "windows",
+            "productivity",
+            "developer tool",
+            "desktop utility"
+          ],
+          "summary_tokens_used": 1269,
+          "summary_status": "ok"
+        },
+        {
+          "title": "hugohe3 / ppt-master",
+          "description": "AI generates a real, editable PowerPoint from any document — native shapes & animations, speaker notes voiced as audio narration, and the option to follow your own .pptx template, not slide images · by Hugo He",
+          "url": "https://github.com/hugohe3/ppt-master",
+          "summary": "Tool that turns source material into natively editable PowerPoint decks. Keeps slides editable in PowerPoint instead of flattening them into images. Uses AI to analyze content, generate visual structure, and export PPTX files. Targets people who want presentation automation while still editing the final deck by hand.",
+          "summary_bullets": [
+            "Tool that turns source material into natively editable PowerPoint decks.",
+            "Keeps slides editable in PowerPoint instead of flattening them into images.",
+            "Uses AI to analyze content, generate visual structure, and export PPTX files.",
+            "Targets people who want presentation automation while still editing the final deck by hand."
+          ],
+          "tags": [
+            "presentation",
+            "design tool",
+            "productivity",
+            "ai tool"
+          ],
+          "summary_tokens_used": 3942,
+          "summary_status": "ok"
+        },
+        {
+          "title": "JCodesMore / ai-website-cloner-template",
+          "description": "Clone any website with one command using AI coding agents",
+          "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+          "summary": "Template for rebuilding an existing website into a clean Next.js codebase with AI agents. Guides an agent through reconnaissance, token extraction, component specs, and parallel rebuilds. Intended for site migration, recovery of lost source, and learning from production layouts. Includes project structure, workflow scripts, and instructions for multiple AI coding tools.",
+          "summary_bullets": [
+            "Template for rebuilding an existing website into a clean Next.js codebase with AI agents.",
+            "Guides an agent through reconnaissance, token extraction, component specs, and parallel rebuilds.",
+            "Intended for site migration, recovery of lost source, and learning from production layouts.",
+            "Includes project structure, workflow scripts, and instructions for multiple AI coding tools."
+          ],
+          "tags": [
+            "website cloning",
+            "developer tool",
+            "ai agent",
+            "web development"
+          ],
+          "summary_tokens_used": 1795,
+          "summary_status": "ok"
+        },
+        {
+          "title": "garrytan / gstack",
+          "description": "Use Garry Tan's exact Claude Code setup: 23 opinionated tools that serve as CEO, Designer, Eng Manager, Release Manager, Doc Engineer, and QA",
+          "url": "https://github.com/garrytan/gstack",
+          "summary": "Set of AI coding workflows that turns Claude Code into a virtual engineering team. Provides slash commands for planning, design review, QA, security review, shipping, and retrospectives. Aims to help founders and engineers ship faster with structured agent roles and checklists. Focuses on process automation for software delivery rather than a single app feature.",
+          "summary_bullets": [
+            "Set of AI coding workflows that turns Claude Code into a virtual engineering team.",
+            "Provides slash commands for planning, design review, QA, security review, shipping, and retrospectives.",
+            "Aims to help founders and engineers ship faster with structured agent roles and checklists.",
+            "Focuses on process automation for software delivery rather than a single app feature."
+          ],
+          "tags": [
+            "ai agent",
+            "developer tool",
+            "software engineering",
+            "productivity"
+          ],
+          "summary_tokens_used": 3942,
+          "summary_status": "ok"
+        },
+        {
+          "title": "Anil-matcha / Open-Generative-AI",
+          "description": "Unrestricted Open-source alternative to AI video platforms — Free AI image & video generation studio with 200+ models (Flux, Midjourney, Kling, Sora, Veo). No content filters. Self-hosted, MIT licensed.",
+          "url": "https://github.com/Anil-matcha/Open-Generative-AI",
+          "summary": "Open-source alternative to AI video platforms for generating images and videos. Supports a large set of models for text-to-image, image-to-image, text-to-video, and lip sync. Offers both a hosted browser experience and a self-hosted desktop app. Designed for creators who want a more open workflow without subscriptions or closed ecosystems.",
+          "summary_bullets": [
+            "Open-source alternative to AI video platforms for generating images and videos.",
+            "Supports a large set of models for text-to-image, image-to-image, text-to-video, and lip sync.",
+            "Offers both a hosted browser experience and a self-hosted desktop app.",
+            "Designed for creators who want a more open workflow without subscriptions or closed ecosystems."
+          ],
+          "tags": [
+            "ai video",
+            "image generation",
+            "creative tool",
+            "self-hosting"
+          ],
+          "summary_tokens_used": 3942,
+          "summary_status": "ok"
+        },
+        {
+          "title": "topoteretes / cognee",
+          "description": "Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine.",
+          "url": "https://github.com/topoteretes/cognee",
+          "summary": "Open-source memory platform that gives AI agents persistent long-term memory across sessions. Ingests data in many formats and builds a self-hosted knowledge graph for recall and reasoning. Supports agent workflows such as remember, recall, forget, and improve. Targets teams building agents that need context management, traceability, and reusable knowledge.",
+          "summary_bullets": [
+            "Open-source memory platform that gives AI agents persistent long-term memory across sessions.",
+            "Ingests data in many formats and builds a self-hosted knowledge graph for recall and reasoning.",
+            "Supports agent workflows such as remember, recall, forget, and improve.",
+            "Targets teams building agents that need context management, traceability, and reusable knowledge."
+          ],
+          "tags": [
+            "ai memory",
+            "knowledge graph",
+            "developer tool",
+            "ai agent"
+          ],
+          "summary_tokens_used": 3942,
+          "summary_status": "ok"
+        },
+        {
+          "title": "dbt-labs / dbt-core",
+          "description": "dbt enables data analysts and engineers to transform their data using the same practices that software engineers use to build applications.",
+          "url": "https://github.com/dbt-labs/dbt-core",
+          "summary": "Data transformation framework that helps analysts and engineers build warehouse models with software engineering practices. Turns SQL select statements into managed models, tests, and documented data pipelines. dbt Core v2 is positioned as a faster, stricter, more scalable rewrite foundation. Used by teams organizing analytics code and maintaining reliable data transformations.",
+          "summary_bullets": [
+            "Data transformation framework that helps analysts and engineers build warehouse models with software engineering practices.",
+            "Turns SQL select statements into managed models, tests, and documented data pipelines.",
+            "dbt Core v2 is positioned as a faster, stricter, more scalable rewrite foundation.",
+            "Used by teams organizing analytics code and maintaining reliable data transformations."
+          ],
+          "tags": [
+            "data engineering",
+            "analytics",
+            "developer tool",
+            "etl"
+          ],
+          "summary_tokens_used": 1158,
+          "summary_status": "ok"
+        },
+        {
+          "title": "luongnv89 / claude-howto",
+          "description": "A visual, example-driven guide to Claude Code — from basic concepts to advanced agents, with copy-paste templates that bring immediate value.",
+          "url": "https://github.com/luongnv89/claude-howto",
+          "summary": "Learning guide for mastering Claude Code through tutorials, templates, and a progressive roadmap. Covers slash commands, memory, skills, hooks, MCP, subagents, plugins, and checkpoints. Includes copy-paste project files and visual diagrams so users can apply features quickly. Aims to move users from basic prompting to full workflow automation with Claude Code.",
+          "summary_bullets": [
+            "Learning guide for mastering Claude Code through tutorials, templates, and a progressive roadmap.",
+            "Covers slash commands, memory, skills, hooks, MCP, subagents, plugins, and checkpoints.",
+            "Includes copy-paste project files and visual diagrams so users can apply features quickly.",
+            "Aims to move users from basic prompting to full workflow automation with Claude Code."
+          ],
+          "tags": [
+            "education",
+            "ai agent",
+            "developer tool",
+            "tutorial"
+          ],
+          "summary_tokens_used": 3942,
+          "summary_status": "ok"
+        },
+        {
+          "title": "anomalyco / opencode",
+          "description": "The open source coding agent.",
+          "url": "https://github.com/anomalyco/opencode",
+          "summary": "Open-source AI coding agent with both CLI and desktop options. Supports multiple installation methods and includes built-in planning and build modes. Designed for coding workflows across different operating systems and package managers. Provides documentation and community guidance for contributors and related projects.",
+          "summary_bullets": [
+            "Open-source AI coding agent with both CLI and desktop options.",
+            "Supports multiple installation methods and includes built-in planning and build modes.",
+            "Designed for coding workflows across different operating systems and package managers.",
+            "Provides documentation and community guidance for contributors and related projects."
+          ],
+          "tags": [
+            "ai agent",
+            "developer tool",
+            "cli tool",
+            "productivity"
+          ],
+          "summary_tokens_used": 953,
+          "summary_status": "ok"
+        }
+      ]
+    }
+  ],
+  "total_repositories": 14,
+  "total_summary_tokens_used": 39289
+}
