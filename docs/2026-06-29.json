@@ -1,0 +1,265 @@
+{
+  "date": "2026-06-29",
+  "languages": [
+    {
+      "name": "trending",
+      "repository_count": 12,
+      "summary_tokens_used": 37217,
+      "repositories": [
+        {
+          "title": "simplex-chat / simplex-chat",
+          "description": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!",
+          "url": "https://github.com/simplex-chat/simplex-chat",
+          "summary": "Private messaging app built around the absence of user identifiers. Protects message content and metadata with end-to-end encryption and extra encryption layers. Provides mobile apps for Android and iOS, plus a terminal client for desktop platforms. Lets users connect by sharing invitation links or QR codes instead of persistent accounts. Supports user groups, bots, translations, and community updates around the chat platform.",
+          "summary_bullets": [
+            "Private messaging app built around the absence of user identifiers.",
+            "Protects message content and metadata with end-to-end encryption and extra encryption layers.",
+            "Provides mobile apps for Android and iOS, plus a terminal client for desktop platforms.",
+            "Lets users connect by sharing invitation links or QR codes instead of persistent accounts.",
+            "Supports user groups, bots, translations, and community updates around the chat platform."
+          ],
+          "tags": [
+            "messaging",
+            "privacy",
+            "security",
+            "collaboration"
+          ],
+          "summary_tokens_used": 3938,
+          "summary_status": "ok"
+        },
+        {
+          "title": "ripienaar / free-for-dev",
+          "description": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev",
+          "url": "https://github.com/ripienaar/free-for-dev",
+          "summary": "Curated list of services that offer free tiers for developers and open source users. Focuses on infrastructure and devops-oriented tools rather than self-hosted software. Organizes services by categories such as cloud, monitoring, security, databases, and collaboration. Documents free-tier limits and eligibility rules so users can compare offerings quickly. Maintained through community pull requests and reviews as service offerings change over time.",
+          "summary_bullets": [
+            "Curated list of services that offer free tiers for developers and open source users.",
+            "Focuses on infrastructure and devops-oriented tools rather than self-hosted software.",
+            "Organizes services by categories such as cloud, monitoring, security, databases, and collaboration.",
+            "Documents free-tier limits and eligibility rules so users can compare offerings quickly.",
+            "Maintained through community pull requests and reviews as service offerings change over time."
+          ],
+          "tags": [
+            "developer tool",
+            "cloud",
+            "devops",
+            "reference"
+          ],
+          "summary_tokens_used": 3938,
+          "summary_status": "ok"
+        },
+        {
+          "title": "commaai / openpilot",
+          "description": "openpilot is an operating system for robotics. Currently, it upgrades the driver assistance system on 300+ supported cars.",
+          "url": "https://github.com/commaai/openpilot",
+          "summary": "Open source driving assistance system for supported cars. Upgrades the driver assistance capabilities of more than 300 vehicles. Runs on comma hardware and includes setup paths for release, staging, and nightly branches. Provides documentation, community support, and testing infrastructure for development. Emphasizes safety, data collection controls, and research-only usage disclaimers.",
+          "summary_bullets": [
+            "Open source driving assistance system for supported cars.",
+            "Upgrades the driver assistance capabilities of more than 300 vehicles.",
+            "Runs on comma hardware and includes setup paths for release, staging, and nightly branches.",
+            "Provides documentation, community support, and testing infrastructure for development.",
+            "Emphasizes safety, data collection controls, and research-only usage disclaimers."
+          ],
+          "tags": [
+            "automotive",
+            "robotics",
+            "driver assistance",
+            "open source"
+          ],
+          "summary_tokens_used": 1389,
+          "summary_status": "ok"
+        },
+        {
+          "title": "Robbyant / lingbot-map",
+          "description": "A feed-forward 3D foundation model for reconstructing scenes from streaming data",
+          "url": "https://github.com/Robbyant/lingbot-map",
+          "summary": "Streaming 3D reconstruction model for building geometry from long image sequences. Uses a feed-forward transformer design to combine coordinate grounding, geometric cues, and drift correction. Targets real-time or near-real-time inference on long runs with efficient memory use. Includes interactive demos, offline rendering, and benchmark evaluation scripts. Provides example scenes and workflows for indoor, outdoor, and large-scale reconstruction.",
+          "summary_bullets": [
+            "Streaming 3D reconstruction model for building geometry from long image sequences.",
+            "Uses a feed-forward transformer design to combine coordinate grounding, geometric cues, and drift correction.",
+            "Targets real-time or near-real-time inference on long runs with efficient memory use.",
+            "Includes interactive demos, offline rendering, and benchmark evaluation scripts.",
+            "Provides example scenes and workflows for indoor, outdoor, and large-scale reconstruction."
+          ],
+          "tags": [
+            "3d reconstruction",
+            "computer vision",
+            "ai model",
+            "developer tool"
+          ],
+          "summary_tokens_used": 3938,
+          "summary_status": "ok"
+        },
+        {
+          "title": "DeusData / codebase-memory-mcp",
+          "description": "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 158 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+          "url": "https://github.com/DeusData/codebase-memory-mcp",
+          "summary": "Local code intelligence engine for AI coding agents that indexes repositories quickly. Builds a persistent knowledge graph of functions, classes, call chains, routes, and cross-service links. Exposes MCP tools for search, tracing, architecture analysis, impact analysis, and more. Runs as a single static binary with no external dependencies or API keys. Includes a graph visualization UI and support for automatic reindexing across supported agents.",
+          "summary_bullets": [
+            "Local code intelligence engine for AI coding agents that indexes repositories quickly.",
+            "Builds a persistent knowledge graph of functions, classes, call chains, routes, and cross-service links.",
+            "Exposes MCP tools for search, tracing, architecture analysis, impact analysis, and more.",
+            "Runs as a single static binary with no external dependencies or API keys.",
+            "Includes a graph visualization UI and support for automatic reindexing across supported agents."
+          ],
+          "tags": [
+            "developer tool",
+            "code search",
+            "ai agent",
+            "productivity"
+          ],
+          "summary_tokens_used": 3938,
+          "summary_status": "ok"
+        },
+        {
+          "title": "cupy / cupy",
+          "description": "NumPy & SciPy for GPU",
+          "url": "https://github.com/cupy/cupy",
+          "summary": "GPU-accelerated array library that matches NumPy and SciPy APIs. Lets existing scientific Python code run on NVIDIA CUDA or AMD ROCm hardware. Provides drop-in acceleration for numerical computing without rewriting application logic. Also exposes low-level GPU features such as raw kernels, streams, and runtime APIs. Ships install options for pip, conda, and Docker across supported platforms.",
+          "summary_bullets": [
+            "GPU-accelerated array library that matches NumPy and SciPy APIs.",
+            "Lets existing scientific Python code run on NVIDIA CUDA or AMD ROCm hardware.",
+            "Provides drop-in acceleration for numerical computing without rewriting application logic.",
+            "Also exposes low-level GPU features such as raw kernels, streams, and runtime APIs.",
+            "Ships install options for pip, conda, and Docker across supported platforms."
+          ],
+          "tags": [
+            "gpu computing",
+            "scientific computing",
+            "developer tool"
+          ],
+          "summary_tokens_used": 1088,
+          "summary_status": "ok"
+        },
+        {
+          "title": "altic-dev / FluidVoice",
+          "description": "FluidVoice - Fastest macOS Offline Dictation app - Voice to Text fully Local. One ⭐ takes us a long way :))",
+          "url": "https://github.com/altic-dev/FluidVoice",
+          "summary": "macOS dictation app that converts speech to text with optional local AI enhancement. Supports voice-driven writing, command mode, and text rewriting across apps. Offers multiple speech models with options for local, cloud, and system-based transcription. Keeps audio and text local by default unless the user opts into cloud providers. Includes global hotkeys, live preview, history, theming, and per-app configuration.",
+          "summary_bullets": [
+            "macOS dictation app that converts speech to text with optional local AI enhancement.",
+            "Supports voice-driven writing, command mode, and text rewriting across apps.",
+            "Offers multiple speech models with options for local, cloud, and system-based transcription.",
+            "Keeps audio and text local by default unless the user opts into cloud providers.",
+            "Includes global hotkeys, live preview, history, theming, and per-app configuration."
+          ],
+          "tags": [
+            "voice",
+            "productivity",
+            "macos",
+            "dictation"
+          ],
+          "summary_tokens_used": 3265,
+          "summary_status": "ok"
+        },
+        {
+          "title": "opendatalab / MinerU",
+          "description": "Transforms complex documents like PDFs and Office docs into LLM-ready markdown/JSON for your Agentic workflows.",
+          "url": "https://github.com/opendatalab/MinerU",
+          "summary": "Document parsing engine for turning PDFs, office files, images, and web pages into structured text. Produces Markdown and JSON for LLM, RAG, and agent workflows. Handles tables, formulas, headers, footers, scanned documents, and complex layouts. Supports OCR in many languages and multiple deployment modes, including offline use. Integrates with MCP, SDKs, CLI, REST APIs, and common RAG frameworks.",
+          "summary_bullets": [
+            "Document parsing engine for turning PDFs, office files, images, and web pages into structured text.",
+            "Produces Markdown and JSON for LLM, RAG, and agent workflows.",
+            "Handles tables, formulas, headers, footers, scanned documents, and complex layouts.",
+            "Supports OCR in many languages and multiple deployment modes, including offline use.",
+            "Integrates with MCP, SDKs, CLI, REST APIs, and common RAG frameworks."
+          ],
+          "tags": [
+            "document processing",
+            "ocr",
+            "rag",
+            "developer tool"
+          ],
+          "summary_tokens_used": 3937,
+          "summary_status": "ok"
+        },
+        {
+          "title": "HKUDS / Vibe-Trading",
+          "description": "\"Vibe-Trading: Your Personal Trading Agent\"",
+          "url": "https://github.com/HKUDS/Vibe-Trading",
+          "summary": "Trading agent platform that gives users automated market research and execution workflows. Connects to multiple data sources, brokers, and analysis tools through a unified interface. Includes a web UI, CLI, API, and MCP support for interactive and automated use. Supports backtesting, scheduled research, shadow accounts, and report generation. Focuses on security hardening, provider reliability, and sandboxed file operations.",
+          "summary_bullets": [
+            "Trading agent platform that gives users automated market research and execution workflows.",
+            "Connects to multiple data sources, brokers, and analysis tools through a unified interface.",
+            "Includes a web UI, CLI, API, and MCP support for interactive and automated use.",
+            "Supports backtesting, scheduled research, shadow accounts, and report generation.",
+            "Focuses on security hardening, provider reliability, and sandboxed file operations."
+          ],
+          "tags": [
+            "trading",
+            "fintech",
+            "ai agent",
+            "developer tool"
+          ],
+          "summary_tokens_used": 3937,
+          "summary_status": "ok"
+        },
+        {
+          "title": "ByteByteGoHq / system-design-101",
+          "description": "Explain complex systems using visuals and simple terms. Help you prepare for system design interviews.",
+          "url": "https://github.com/ByteByteGoHq/system-design-101",
+          "summary": "Educational repository that explains system design concepts with visuals and plain language. Covers web protocols, APIs, databases, caching, distributed systems, and cloud architecture. Includes interview prep material and common real-world architecture case studies. Aims to help readers understand how production systems work and how they scale. Organized as a reference collection of short explainers and cheatsheets.",
+          "summary_bullets": [
+            "Educational repository that explains system design concepts with visuals and plain language.",
+            "Covers web protocols, APIs, databases, caching, distributed systems, and cloud architecture.",
+            "Includes interview prep material and common real-world architecture case studies.",
+            "Aims to help readers understand how production systems work and how they scale.",
+            "Organized as a reference collection of short explainers and cheatsheets."
+          ],
+          "tags": [
+            "education",
+            "system design",
+            "software architecture",
+            "interview prep"
+          ],
+          "summary_tokens_used": 3937,
+          "summary_status": "ok"
+        },
+        {
+          "title": "usestrix / strix",
+          "description": "Open-source AI hackers to find and fix your app’s vulnerabilities.",
+          "url": "https://github.com/usestrix/strix",
+          "summary": "AI-driven security testing tool that acts like autonomous hackers to find app vulnerabilities. Runs dynamic assessments and validates findings with proof-of-concepts. Supports penetration testing, bug bounty workflows, and CI/CD security checks. Provides a CLI, automated reports, and support for multiple LLM providers. Targets application security, authenticated testing, and continuous vulnerability scanning.",
+          "summary_bullets": [
+            "AI-driven security testing tool that acts like autonomous hackers to find app vulnerabilities.",
+            "Runs dynamic assessments and validates findings with proof-of-concepts.",
+            "Supports penetration testing, bug bounty workflows, and CI/CD security checks.",
+            "Provides a CLI, automated reports, and support for multiple LLM providers.",
+            "Targets application security, authenticated testing, and continuous vulnerability scanning."
+          ],
+          "tags": [
+            "security",
+            "penetration testing",
+            "developer tool",
+            "ai agent"
+          ],
+          "summary_tokens_used": 2452,
+          "summary_status": "ok"
+        },
+        {
+          "title": "browser-use / video-use",
+          "description": "Edit videos with coding agents",
+          "url": "https://github.com/browser-use/video-use",
+          "summary": "Video editing workflow for agentic assistants that turns raw footage into a finished cut. Uses transcripts and on-demand visual previews to make edit decisions without watching every frame. Automates trimming filler words, color grading, subtitle burning, and audio fades. Can generate motion graphics and overlays through parallel sub-agents. Persists session context so future editing sessions can resume from prior work.",
+          "summary_bullets": [
+            "Video editing workflow for agentic assistants that turns raw footage into a finished cut.",
+            "Uses transcripts and on-demand visual previews to make edit decisions without watching every frame.",
+            "Automates trimming filler words, color grading, subtitle burning, and audio fades.",
+            "Can generate motion graphics and overlays through parallel sub-agents.",
+            "Persists session context so future editing sessions can resume from prior work."
+          ],
+          "tags": [
+            "video editing",
+            "creative tools",
+            "automation",
+            "ai agent"
+          ],
+          "summary_tokens_used": 1460,
+          "summary_status": "ok"
+        }
+      ]
+    }
+  ],
+  "total_repositories": 12,
+  "total_summary_tokens_used": 37217
+}
