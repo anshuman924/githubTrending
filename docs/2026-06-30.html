@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Trending Report</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #19181a;
+      --panel: #221f22;
+      --panel-strong: #2d2a2e;
+      --text: #fcfcfa;
+      --muted: #c1c0c0;
+      --border: #403e41;
+      --accent: #ffd866;
+      --accent-strong: #ff6188;
+      --accent-soft: rgba(255, 216, 102, 0.14);
+      --green: #a9dc76;
+      --cyan: #78dce8;
+      --purple: #ab9df2;
+      --warn: #fc9867;
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    header {
+      background: linear-gradient(180deg, #2d2a2e 0%, #221f22 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 20px;
+    }
+
+    .topbar {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .title-block {
+      display: grid;
+      gap: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      color: var(--accent);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .sidebar-toggle {
+      width: 42px;
+      min-height: 42px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    .sidebar-toggle span,
+    .sidebar-toggle::before,
+    .sidebar-toggle::after {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .sidebar-toggle {
+      gap: 4px;
+    }
+
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    body.sidebar-collapsed .layout {
+      grid-template-columns: minmax(0, 1fr) 0;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 16px;
+      overflow: hidden;
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease;
+    }
+
+    body.sidebar-collapsed .sidebar {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(12px);
+    }
+
+    .filters {
+      display: grid;
+      gap: 8px;
+    }
+
+    button {
+      min-height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      padding: 7px 12px;
+    }
+
+    button[aria-pressed="true"] {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+      color: #19181a;
+      font-weight: 700;
+    }
+
+    .filters button {
+      width: 100%;
+      text-align: left;
+    }
+
+    .grid {
+      position: relative;
+      min-height: 220px;
+      transition: height 260ms ease;
+    }
+
+    .tile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 320ms ease;
+    }
+
+    .tile.expanded {
+      border-color: rgba(255, 216, 102, 0.48);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+    }
+
+    .tile-toggle {
+      width: 100%;
+      min-height: 160px;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto;
+      gap: 10px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      padding: 14px;
+    }
+
+    .tile-toggle:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: -3px;
+    }
+
+    .repo-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 700;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+      color: var(--text);
+    }
+
+    .repo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 24px;
+    }
+
+    .tag {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: rgba(120, 220, 232, 0.16);
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      text-transform: lowercase;
+    }
+
+    .description {
+      margin: 0;
+      color: var(--muted);
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .tile-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-ok {
+      color: var(--green);
+    }
+
+    .status-failed,
+    .status-readme_fetch_failed,
+    .status-skipped,
+    .status-stale_codex_exec_terminated {
+      color: var(--warn);
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      border-top: 0 solid transparent;
+      background: var(--panel-strong);
+      opacity: 0;
+      padding: 0 14px;
+      transition:
+        max-height 320ms ease,
+        opacity 180ms ease,
+        padding 320ms ease,
+        border-color 320ms ease,
+        border-width 320ms ease;
+    }
+
+    .tile.expanded .details {
+      border-top-width: 1px;
+      border-top-color: var(--border);
+      opacity: 1;
+      padding: 14px;
+    }
+
+    .summary-list {
+      margin: 0 0 12px;
+      padding-left: 20px;
+      color: var(--text);
+    }
+
+    .summary-list li {
+      margin: 0 0 8px;
+    }
+
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid rgba(171, 157, 242, 0.42);
+      border-radius: 8px;
+      background: rgba(171, 157, 242, 0.12);
+      color: var(--purple);
+      font-weight: 600;
+      padding: 7px 12px;
+      text-decoration: none;
+    }
+
+    .repo-link:hover {
+      border-color: var(--purple);
+      background: rgba(171, 157, 242, 0.18);
+    }
+
+    .empty {
+      position: static;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--muted);
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      header {
+        padding: 16px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr) 190px;
+        padding: 14px;
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .tile-toggle {
+        min-height: 140px;
+      }
+
+      .repo-title {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="title-block">
+        <h1>GitHub Trending Report</h1>
+        <div class="meta" id="meta"></div>
+      </div>
+      <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle tag filters" aria-expanded="true"><span></span></button>
+    </div>
+  </header>
+  <main class="layout">
+    <section class="content">
+      <section class="grid" id="repoGrid" aria-live="polite"></section>
+    </section>
+    <aside class="sidebar" id="sidebar">
+      <nav class="filters" id="filters" aria-label="Tag filters"></nav>
+    </aside>
+  </main>
+
+  <script>
+    const report = {"date": "2026-06-30", "languages": [{"name": "trending", "repository_count": 13, "summary_tokens_used": 36708, "repositories": [{"title": "simplex-chat / simplex-chat", "description": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!", "url": "https://github.com/simplex-chat/simplex-chat", "summary": "Private messaging app built around protecting identity, contacts, and message metadata. Uses end-to-end encryption plus an additional encryption layer for conversations. Offers mobile apps for Android and iOS and a terminal app for Linux, macOS, and Windows. Supports private connections through invitation links or QR codes rather than user identifiers.", "summary_bullets": ["Private messaging app built around protecting identity, contacts, and message metadata.", "Uses end-to-end encryption plus an additional encryption layer for conversations.", "Offers mobile apps for Android and iOS and a terminal app for Linux, macOS, and Windows.", "Supports private connections through invitation links or QR codes rather than user identifiers."], "tags": ["messaging", "privacy", "security", "mobile app"], "summary_tokens_used": 4064, "summary_status": "ok"}, {"title": "msitarzewski / agency-agents", "description": "A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.", "url": "https://github.com/msitarzewski/agency-agents", "summary": "A collection of specialized AI agent personas for different kinds of work. Agents are organized by roles such as engineering, design, sales, marketing, and operations. Provides installable agent packs for tools like Claude Code, Cursor, Codex, Gemini, and others. Includes a desktop app that browses the roster and installs agents with one click.", "summary_bullets": ["A collection of specialized AI agent personas for different kinds of work.", "Agents are organized by roles such as engineering, design, sales, marketing, and operations.", "Provides installable agent packs for tools like Claude Code, Cursor, Codex, Gemini, and others.", "Includes a desktop app that browses the roster and installs agents with one click."], "tags": ["ai agents", "developer tool", "productivity", "collaboration"], "summary_tokens_used": 4064, "summary_status": "ok"}, {"title": "cupy / cupy", "description": "NumPy & SciPy for GPU", "url": "https://github.com/cupy/cupy", "summary": "GPU-accelerated array library that mirrors the NumPy and SciPy APIs. Lets existing Python numerical code run on NVIDIA CUDA or AMD ROCm hardware. Provides lower-level access to CUDA features such as kernels, streams, and runtime APIs. Targets users who want faster scientific computing and machine learning workloads on GPUs.", "summary_bullets": ["GPU-accelerated array library that mirrors the NumPy and SciPy APIs.", "Lets existing Python numerical code run on NVIDIA CUDA or AMD ROCm hardware.", "Provides lower-level access to CUDA features such as kernels, streams, and runtime APIs.", "Targets users who want faster scientific computing and machine learning workloads on GPUs."], "tags": ["scientific computing", "gpu computing", "machine learning"], "summary_tokens_used": 1124, "summary_status": "ok"}, {"title": "altic-dev / FluidVoice", "description": "FluidVoice - Fastest macOS Offline Dictation app - Voice to Text fully Local. One ⭐ takes us a long way :))", "url": "https://github.com/altic-dev/FluidVoice", "summary": "macOS dictation app for voice-to-text input with on-device AI enhancement. Supports live transcription, rewriting text into any app, and voice-driven Mac commands. Offers multiple speech models, including local and cloud-backed options. Keeps audio and text local unless the user opts into a cloud provider.", "summary_bullets": ["macOS dictation app for voice-to-text input with on-device AI enhancement.", "Supports live transcription, rewriting text into any app, and voice-driven Mac commands.", "Offers multiple speech models, including local and cloud-backed options.", "Keeps audio and text local unless the user opts into a cloud provider."], "tags": ["speech recognition", "productivity", "macos", "accessibility"], "summary_tokens_used": 3371, "summary_status": "ok"}, {"title": "soxoj / maigret", "description": "🕵️‍♂️ Collect a dossier on a person by username from 3000+ sites", "url": "https://github.com/soxoj/maigret", "summary": "OSINT tool that builds a dossier on a person from a username. Checks thousands of websites for related accounts and profile details. Can export reports, build graphs, and run through a web interface or CLI. Supports recursive searching, tagging, proxies, Tor, and optional AI summaries.", "summary_bullets": ["OSINT tool that builds a dossier on a person from a username.", "Checks thousands of websites for related accounts and profile details.", "Can export reports, build graphs, and run through a web interface or CLI.", "Supports recursive searching, tagging, proxies, Tor, and optional AI summaries."], "tags": ["osint", "security", "investigation", "cli tool"], "summary_tokens_used": 3328, "summary_status": "ok"}, {"title": "commaai / openpilot", "description": "openpilot is an operating system for robotics. Currently, it upgrades the driver assistance system on 300+ supported cars.", "url": "https://github.com/commaai/openpilot", "summary": "Operating system for robotics that upgrades driver assistance in supported cars. Used with comma hardware and a supported vehicle harness to run in a car. Provides release, staging, nightly, and developer branches for different update channels. Includes safety testing, data collection controls, and community development resources.", "summary_bullets": ["Operating system for robotics that upgrades driver assistance in supported cars.", "Used with comma hardware and a supported vehicle harness to run in a car.", "Provides release, staging, nightly, and developer branches for different update channels.", "Includes safety testing, data collection controls, and community development resources."], "tags": ["robotics", "automotive", "driver assistance", "embedded systems"], "summary_tokens_used": 1433, "summary_status": "ok"}, {"title": "ripienaar / free-for-dev", "description": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev", "url": "https://github.com/ripienaar/free-for-dev", "summary": "Curated list of services that offer free tiers for developers and open source teams. Focuses on infrastructure, cloud, tooling, and related online services. Organizes offerings by category such as cloud, CI/CD, monitoring, security, and collaboration. Helps developers compare free plans without searching across many providers.", "summary_bullets": ["Curated list of services that offer free tiers for developers and open source teams.", "Focuses on infrastructure, cloud, tooling, and related online services.", "Organizes offerings by category such as cloud, CI/CD, monitoring, security, and collaboration.", "Helps developers compare free plans without searching across many providers."], "tags": ["developer resources", "cloud", "devops", "reference"], "summary_tokens_used": 4064, "summary_status": "ok"}, {"title": "logto-io / logto", "description": "🧑‍🚀 Authentication and authorization infrastructure for SaaS and AI apps, built on OIDC and OAuth 2.1 with multi-tenancy, SSO, and RBAC.", "url": "https://github.com/logto-io/logto", "summary": "Open-source auth infrastructure for SaaS and AI apps. Provides OIDC, OAuth 2.1, SAML, multi-tenancy, enterprise SSO, and RBAC. Includes prebuilt sign-in flows, customizable UI, and SDKs for many frameworks. Targets teams building web apps, mobile apps, APIs, CLI tools, and agent-based systems.", "summary_bullets": ["Open-source auth infrastructure for SaaS and AI apps.", "Provides OIDC, OAuth 2.1, SAML, multi-tenancy, enterprise SSO, and RBAC.", "Includes prebuilt sign-in flows, customizable UI, and SDKs for many frameworks.", "Targets teams building web apps, mobile apps, APIs, CLI tools, and agent-based systems."], "tags": ["authentication", "security", "saas", "developer tool"], "summary_tokens_used": 851, "summary_status": "ok"}, {"title": "browser-use / video-use", "description": "Edit videos with coding agents", "url": "https://github.com/browser-use/video-use", "summary": "Tool for editing videos with an agent instead of a traditional timeline UI. Works from raw footage folders and produces a finished video after conversational instructions. Cuts filler words and dead space, adds subtitles, and applies color grading and fades. Designed for creators making talking-heads, tutorials, interviews, travel videos, and similar content.", "summary_bullets": ["Tool for editing videos with an agent instead of a traditional timeline UI.", "Works from raw footage folders and produces a finished video after conversational instructions.", "Cuts filler words and dead space, adds subtitles, and applies color grading and fades.", "Designed for creators making talking-heads, tutorials, interviews, travel videos, and similar content."], "tags": ["video editing", "creator tools", "ai agents", "productivity"], "summary_tokens_used": 1506, "summary_status": "ok"}, {"title": "0xNyk / council-of-high-intelligence", "description": "18 AI personas deliberate your hardest decisions across multiple LLM providers. Aristotle, Feynman, Kahneman, Torvalds & more — structured multi-round deliberation with genuine model diversity. One command: /council", "url": "https://github.com/0xNyk/council-of-high-intelligence", "summary": "Runs a council of 18 AI personas to deliberate on hard decisions. Uses multiple model providers so different members can reason from different perspectives. Supports full, quick, and duo deliberation modes for different decision sizes. Produces structured verdicts that surface disagreement, unresolved questions, and next steps.", "summary_bullets": ["Runs a council of 18 AI personas to deliberate on hard decisions.", "Uses multiple model providers so different members can reason from different perspectives.", "Supports full, quick, and duo deliberation modes for different decision sizes.", "Produces structured verdicts that surface disagreement, unresolved questions, and next steps."], "tags": ["ai agents", "decision support", "collaboration", "productivity"], "summary_tokens_used": 4063, "summary_status": "ok"}, {"title": "HKUDS / Vibe-Trading", "description": "\"Vibe-Trading: Your Personal Trading Agent\"", "url": "https://github.com/HKUDS/Vibe-Trading", "summary": "Trading agent platform that adds comprehensive trading capabilities through one command. Connects to brokers and data sources for research, shadow accounts, and live or advisory workflows. Includes backtesting, run tracking, reports, and API/MCP integration. Focused on automated trading research, execution, and analysis workflows.", "summary_bullets": ["Trading agent platform that adds comprehensive trading capabilities through one command.", "Connects to brokers and data sources for research, shadow accounts, and live or advisory workflows.", "Includes backtesting, run tracking, reports, and API/MCP integration.", "Focused on automated trading research, execution, and analysis workflows."], "tags": ["trading", "finance", "automation", "developer tool"], "summary_tokens_used": 4063, "summary_status": "ok"}, {"title": "refactoringhq / tolaria", "description": "Desktop app to manage markdown knowledge bases", "url": "https://github.com/refactoringhq/tolaria", "summary": "Desktop app for managing markdown knowledge bases on macOS, Windows, and Linux. Built for second brains, company docs, assistant memory, and personal note systems. Keeps notes as plain markdown files in a git-backed, offline-first vault. Designed for keyboard-first use and AI-assisted workflows without lock-in.", "summary_bullets": ["Desktop app for managing markdown knowledge bases on macOS, Windows, and Linux.", "Built for second brains, company docs, assistant memory, and personal note systems.", "Keeps notes as plain markdown files in a git-backed, offline-first vault.", "Designed for keyboard-first use and AI-assisted workflows without lock-in."], "tags": ["knowledge management", "notes", "productivity", "desktop app"], "summary_tokens_used": 1510, "summary_status": "ok"}, {"title": "veracrypt / VeraCrypt", "description": "Disk encryption with strong security based on TrueCrypt", "url": "https://github.com/veracrypt/VeraCrypt", "summary": "Source code for VeraCrypt, a disk encryption tool based on TrueCrypt. Used to create encrypted volumes and protect data across Windows, Linux, macOS, and BSD. Includes build instructions, signing guidance, and platform-specific requirements. Aimed at users and contributors working on secure storage and encryption software.", "summary_bullets": ["Source code for VeraCrypt, a disk encryption tool based on TrueCrypt.", "Used to create encrypted volumes and protect data across Windows, Linux, macOS, and BSD.", "Includes build instructions, signing guidance, and platform-specific requirements.", "Aimed at users and contributors working on secure storage and encryption software."], "tags": ["security", "encryption", "privacy", "system tool"], "summary_tokens_used": 3267, "summary_status": "ok"}]}], "total_repositories": 13, "total_summary_tokens_used": 36708};
+    const state = {
+      report,
+      activeTag: 'all',
+    };
+
+    const meta = document.getElementById('meta');
+    const filters = document.getElementById('filters');
+    const repoGrid = document.getElementById('repoGrid');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    let tileObserver = null;
+
+    sidebarToggle.addEventListener('click', () => {
+      const collapsed = document.body.classList.toggle('sidebar-collapsed');
+      sidebarToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      layoutTilesSoon();
+    });
+
+    render();
+
+    function render() {
+      renderMeta();
+      renderFilters();
+      renderRepos();
+    }
+
+    function renderMeta() {
+      meta.innerHTML = [
+        `<span>Date: ${escapeHtml(state.report.date)}</span>`,
+        `<span>Repos: ${state.report.total_repositories}</span>`,
+        `<span>Summary tokens: ${state.report.total_summary_tokens_used}</span>`,
+      ].join('');
+    }
+
+    function renderFilters() {
+      const repos = flattenRepos();
+      const tags = sortedTagsByFrequency(repos);
+      const buttons = ['all', ...tags].map((tag) => {
+        const label = tag === 'all' ? 'All' : `${tag} ${tagCount(repos, tag)}`;
+        const pressed = state.activeTag === tag ? 'true' : 'false';
+        return `<button type="button" aria-pressed="${pressed}" data-tag="${escapeAttribute(tag)}">${escapeHtml(label)}</button>`;
+      });
+
+      filters.innerHTML = buttons.join('');
+      filters.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => {
+          state.activeTag = button.dataset.tag;
+          render();
+        });
+      });
+    }
+
+    function renderRepos() {
+      const repos = flattenRepos().filter((repo) => {
+        return state.activeTag === 'all' || repoTags(repo).includes(state.activeTag);
+      });
+
+      if (!repos.length) {
+        repoGrid.innerHTML = '<div class="empty">No repositories for this filter.</div>';
+        repoGrid.style.height = 'auto';
+        return;
+      }
+
+      repoGrid.innerHTML = repos.map(renderRepo).join('');
+      observeTileSizes();
+      repoGrid.querySelectorAll('.tile-toggle').forEach((button) => {
+        button.addEventListener('click', () => {
+          const tile = button.closest('.tile');
+          const wasExpanded = tile.classList.contains('expanded');
+
+          if (wasExpanded) {
+            closeExpandedTile();
+            layoutTilesSoon();
+            return;
+          }
+
+          closeExpandedTile();
+          tile.classList.add('expanded');
+          button.setAttribute('aria-expanded', 'true');
+          setDetailsHeight(tile);
+          layoutTilesSoon();
+        });
+      });
+      layoutTilesSoon();
+    }
+
+    function closeExpandedTile() {
+      repoGrid.querySelectorAll('.tile.expanded').forEach((tile) => {
+        tile.classList.remove('expanded');
+        const details = tile.querySelector('.details');
+        if (details) {
+          details.style.maxHeight = '0px';
+        }
+        const button = tile.querySelector('.tile-toggle');
+        if (button) {
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    function setDetailsHeight(tile) {
+      const details = tile.querySelector('.details');
+      if (details) {
+        details.style.maxHeight = `${details.scrollHeight + 160}px`;
+      }
+    }
+
+    function observeTileSizes() {
+      if (tileObserver) {
+        tileObserver.disconnect();
+      }
+
+      tileObserver = new ResizeObserver(() => layoutTilesSoon());
+      repoGrid.querySelectorAll('.tile').forEach((tile) => tileObserver.observe(tile));
+    }
+
+    function layoutTilesSoon() {
+      requestAnimationFrame(layoutTiles);
+    }
+
+    function layoutTiles() {
+      const tiles = [...repoGrid.querySelectorAll('.tile')];
+      if (!tiles.length) {
+        return;
+      }
+
+      const gap = 14;
+      const minColumnWidth = 280;
+      const containerWidth = repoGrid.clientWidth;
+      const columns = Math.max(1, Math.floor((containerWidth + gap) / (minColumnWidth + gap)));
+      const columnWidth = (containerWidth - gap * (columns - 1)) / columns;
+      const columnHeights = Array(columns).fill(0);
+
+      tiles.forEach((tile) => {
+        tile.style.width = `${columnWidth}px`;
+        const column = columnHeights.indexOf(Math.min(...columnHeights));
+        const x = column * (columnWidth + gap);
+        const y = columnHeights[column];
+
+        tile.style.transform = `translate(${x}px, ${y}px)`;
+        columnHeights[column] += tile.offsetHeight + gap;
+      });
+
+      repoGrid.style.height = `${Math.max(...columnHeights) - gap}px`;
+    }
+
+    window.addEventListener('resize', layoutTilesSoon);
+
+    function sortedTagsByFrequency(repos) {
+      const counts = new Map();
+      repos.forEach((repo) => {
+        repoTags(repo).forEach((tag) => {
+          counts.set(tag, (counts.get(tag) || 0) + 1);
+        });
+      });
+
+      return [...counts.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([tag]) => tag);
+    }
+
+    function tagCount(repos, tag) {
+      return repos.filter((repo) => repoTags(repo).includes(tag)).length;
+    }
+
+    function repoTags(repo) {
+      return Array.isArray(repo.tags) ? repo.tags.slice(0, 5) : [];
+    }
+
+    function repoBullets(repo) {
+      if (Array.isArray(repo.summary_bullets) && repo.summary_bullets.length) {
+        return repo.summary_bullets;
+      }
+
+      return [repo.summary || 'Summary unavailable.'];
+    }
+
+    function flattenRepos() {
+      return state.report.languages.flatMap((language) => {
+        return language.repositories.map((repo) => ({ ...repo }));
+      });
+    }
+
+    function renderRepo(repo) {
+      const statusClass = `status-${repo.summary_status}`;
+      const tags = repoTags(repo);
+      const tagHtml = tags.length
+        ? tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('')
+        : '<span class="tag">untagged</span>';
+      const bullets = repoBullets(repo)
+        .map((bullet) => `<li>${escapeHtml(bullet)}</li>`)
+        .join('');
+
+      return `
+        <article class="tile">
+          <button type="button" class="tile-toggle" aria-expanded="false">
+            <div class="repo-title">
+              <span>${escapeHtml(repo.title)}</span>
+            </div>
+            <p class="description">${escapeHtml(repo.description || 'No description provided.')}</p>
+            <div class="repo-tags">${tagHtml}</div>
+            <div class="tile-footer">
+              <span class="${escapeHtml(statusClass)}">${escapeHtml(repo.summary_status)}</span>
+              <span>${repo.summary_tokens_used} tokens</span>
+            </div>
+          </button>
+          <div class="details">
+            <ul class="summary-list">${bullets}</ul>
+            <a class="repo-link" href="${escapeAttribute(repo.url)}" target="_blank" rel="noopener">Open repository</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value).replace(/`/g, '&#96;');
+    }
+  </script>
+</body>
+</html>
