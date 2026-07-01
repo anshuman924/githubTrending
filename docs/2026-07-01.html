@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GitHub Trending Report</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #19181a;
+      --panel: #221f22;
+      --panel-strong: #2d2a2e;
+      --text: #fcfcfa;
+      --muted: #c1c0c0;
+      --border: #403e41;
+      --accent: #ffd866;
+      --accent-strong: #ff6188;
+      --accent-soft: rgba(255, 216, 102, 0.14);
+      --green: #a9dc76;
+      --cyan: #78dce8;
+      --purple: #ab9df2;
+      --warn: #fc9867;
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    header {
+      background: linear-gradient(180deg, #2d2a2e 0%, #221f22 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 20px;
+    }
+
+    .topbar {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .title-block {
+      display: grid;
+      gap: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      color: var(--accent);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .sidebar-toggle {
+      width: 42px;
+      min-height: 42px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    .sidebar-toggle span,
+    .sidebar-toggle::before,
+    .sidebar-toggle::after {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .sidebar-toggle {
+      gap: 4px;
+    }
+
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    body.sidebar-collapsed .layout {
+      grid-template-columns: minmax(0, 1fr) 0;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 16px;
+      overflow: hidden;
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease;
+    }
+
+    body.sidebar-collapsed .sidebar {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(12px);
+    }
+
+    .filters {
+      display: grid;
+      gap: 8px;
+    }
+
+    button {
+      min-height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      padding: 7px 12px;
+    }
+
+    button[aria-pressed="true"] {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+      color: #19181a;
+      font-weight: 700;
+    }
+
+    .filters button {
+      width: 100%;
+      text-align: left;
+    }
+
+    .grid {
+      position: relative;
+      min-height: 220px;
+      transition: height 260ms ease;
+    }
+
+    .tile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 320ms ease;
+    }
+
+    .tile.expanded {
+      border-color: rgba(255, 216, 102, 0.48);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+    }
+
+    .tile-toggle {
+      width: 100%;
+      min-height: 160px;
+      display: grid;
+      grid-template-rows: auto 1fr auto auto;
+      gap: 10px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      padding: 14px;
+    }
+
+    .tile-toggle:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: -3px;
+    }
+
+    .repo-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 700;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+      color: var(--text);
+    }
+
+    .repo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 24px;
+    }
+
+    .tag {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: rgba(120, 220, 232, 0.16);
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      text-transform: lowercase;
+    }
+
+    .description {
+      margin: 0;
+      color: var(--muted);
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .tile-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status-ok {
+      color: var(--green);
+    }
+
+    .status-failed,
+    .status-readme_fetch_failed,
+    .status-skipped,
+    .status-stale_codex_exec_terminated {
+      color: var(--warn);
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      border-top: 0 solid transparent;
+      background: var(--panel-strong);
+      opacity: 0;
+      padding: 0 14px;
+      transition:
+        max-height 320ms ease,
+        opacity 180ms ease,
+        padding 320ms ease,
+        border-color 320ms ease,
+        border-width 320ms ease;
+    }
+
+    .tile.expanded .details {
+      border-top-width: 1px;
+      border-top-color: var(--border);
+      opacity: 1;
+      padding: 14px;
+    }
+
+    .summary-list {
+      margin: 0 0 12px;
+      padding-left: 20px;
+      color: var(--text);
+    }
+
+    .summary-list li {
+      margin: 0 0 8px;
+    }
+
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid rgba(171, 157, 242, 0.42);
+      border-radius: 8px;
+      background: rgba(171, 157, 242, 0.12);
+      color: var(--purple);
+      font-weight: 600;
+      padding: 7px 12px;
+      text-decoration: none;
+    }
+
+    .repo-link:hover {
+      border-color: var(--purple);
+      background: rgba(171, 157, 242, 0.18);
+    }
+
+    .empty {
+      position: static;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--muted);
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      header {
+        padding: 16px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr) 190px;
+        padding: 14px;
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .tile-toggle {
+        min-height: 140px;
+      }
+
+      .repo-title {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="title-block">
+        <h1>GitHub Trending Report</h1>
+        <div class="meta" id="meta"></div>
+      </div>
+      <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle tag filters" aria-expanded="true"><span></span></button>
+    </div>
+  </header>
+  <main class="layout">
+    <section class="content">
+      <section class="grid" id="repoGrid" aria-live="polite"></section>
+    </section>
+    <aside class="sidebar" id="sidebar">
+      <nav class="filters" id="filters" aria-label="Tag filters"></nav>
+    </aside>
+  </main>
+
+  <script>
+    const report = {"date": "2026-07-01", "languages": [{"name": "trending", "repository_count": 15, "summary_tokens_used": 41788, "repositories": [{"title": "hasaneyldrm / exercises-dataset", "description": "A comprehensive dataset of 433 fitness exercises. Each entry includes name, category, target muscle group, equipment, instructions, thumbnail image, and animation video.", "url": "https://github.com/hasaneyldrm/exercises-dataset", "summary": "Curated dataset of 1,324 fitness exercises with metadata for category, body part, equipment, target, and muscle groups. Includes step-by-step instructions translated into six languages: English, Spanish, Italian, Turkish, Russian, and Chinese. Provides a client-side exercise browser with search and filtering, plus a setup guide for building a backend around the dataset. Designed for workout apps, exercise recommendation systems, and fitness research; media assets are intentionally not bundled.", "summary_bullets": ["Curated dataset of 1,324 fitness exercises with metadata for category, body part, equipment, target, and muscle groups.", "Includes step-by-step instructions translated into six languages: English, Spanish, Italian, Turkish, Russian, and Chinese.", "Provides a client-side exercise browser with search and filtering, plus a setup guide for building a backend around the dataset.", "Designed for workout apps, exercise recommendation systems, and fitness research; media assets are intentionally not bundled."], "tags": ["fitness", "dataset", "health", "developer tool"], "summary_tokens_used": 3871, "summary_status": "ok"}, {"title": "usestrix / strix", "description": "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.", "url": "https://github.com/usestrix/strix", "summary": "Autonomous AI penetration testing tool that runs against codebases and web apps to find vulnerabilities dynamically. Validates findings with proof-of-concept exploits instead of relying only on static analysis. Provides a developer-focused CLI, remediation guidance, and reporting for security teams and app developers. Can integrate with GitHub Actions and CI/CD to block insecure code before merge.", "summary_bullets": ["Autonomous AI penetration testing tool that runs against codebases and web apps to find vulnerabilities dynamically.", "Validates findings with proof-of-concept exploits instead of relying only on static analysis.", "Provides a developer-focused CLI, remediation guidance, and reporting for security teams and app developers.", "Can integrate with GitHub Actions and CI/CD to block insecure code before merge."], "tags": ["security", "devops", "cli tool", "developer tool"], "summary_tokens_used": 2813, "summary_status": "ok"}, {"title": "msitarzewski / agency-agents", "description": "A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.", "url": "https://github.com/msitarzewski/agency-agents", "summary": "Collection of specialized AI agent personas for different workstreams like engineering, design, sales, and marketing. Each agent includes a distinct voice, workflow, and deliverable-focused instructions rather than a generic prompt template. Can be installed into tools such as Claude Code, Cursor, Codex, Gemini, and others through the included app or scripts. Aims to help users assemble a task-specific AI team for coding, review, research, docs, and operations.", "summary_bullets": ["Collection of specialized AI agent personas for different workstreams like engineering, design, sales, and marketing.", "Each agent includes a distinct voice, workflow, and deliverable-focused instructions rather than a generic prompt template.", "Can be installed into tools such as Claude Code, Cursor, Codex, Gemini, and others through the included app or scripts.", "Aims to help users assemble a task-specific AI team for coding, review, research, docs, and operations."], "tags": ["ai agents", "developer tool", "productivity", "collaboration"], "summary_tokens_used": 3871, "summary_status": "ok"}, {"title": "altic-dev / FluidVoice", "description": "Fastest and only macOS Dictation app with on-device STT and custom trained AI enhancement model - Local Wispr Flow alternative. One ⭐ takes us a long way :)) Windows, iOS and Linux coming soon.", "url": "https://github.com/altic-dev/FluidVoice", "summary": "Open-source macOS dictation app with on-device AI enhancement for faster, private voice-to-text. Supports multiple speech models, live transcription overlay, global hotkeys, and typing into other apps. Offers command mode for controlling the Mac by voice and write mode for dictating or rewriting text in place. Keeps audio and text local unless the user opts into cloud AI providers or extra features.", "summary_bullets": ["Open-source macOS dictation app with on-device AI enhancement for faster, private voice-to-text.", "Supports multiple speech models, live transcription overlay, global hotkeys, and typing into other apps.", "Offers command mode for controlling the Mac by voice and write mode for dictating or rewriting text in place.", "Keeps audio and text local unless the user opts into cloud AI providers or extra features."], "tags": ["dictation", "audio", "productivity", "macos"], "summary_tokens_used": 3210, "summary_status": "ok"}, {"title": "diegosouzapw / OmniRoute", "description": "Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline & Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA.", "url": "https://github.com/diegosouzapw/OmniRoute", "summary": "AI gateway that routes coding tools through a large pool of model providers using one endpoint. Supports auto-fallback across subscription, paid, cheap, and free providers to keep requests flowing when limits are hit. Adds token compression, routing strategies, cost telemetry, guardrails, memory, and MCP support for agent workflows. Targets users of coding assistants and teams that want lower cost and more resilient model access.", "summary_bullets": ["AI gateway that routes coding tools through a large pool of model providers using one endpoint.", "Supports auto-fallback across subscription, paid, cheap, and free providers to keep requests flowing when limits are hit.", "Adds token compression, routing strategies, cost telemetry, guardrails, memory, and MCP support for agent workflows.", "Targets users of coding assistants and teams that want lower cost and more resilient model access."], "tags": ["ai gateway", "developer tool", "productivity", "infrastructure"], "summary_tokens_used": 3871, "summary_status": "ok"}, {"title": "browser-use / video-use", "description": "Edit videos with coding agents", "url": "https://github.com/browser-use/video-use", "summary": "Video editing workflow that lets users chat with Claude Code to produce a final edited video from raw footage. Focuses on removing filler, trimming dead space, adding subtitle styles, audio fades, color grading, and overlays. Uses transcripts and selective visual previews so the model edits based on structure rather than frame dumping. Designed for creators who want automated editing without manual timeline work or preset-heavy tools.", "summary_bullets": ["Video editing workflow that lets users chat with Claude Code to produce a final edited video from raw footage.", "Focuses on removing filler, trimming dead space, adding subtitle styles, audio fades, color grading, and overlays.", "Uses transcripts and selective visual previews so the model edits based on structure rather than frame dumping.", "Designed for creators who want automated editing without manual timeline work or preset-heavy tools."], "tags": ["video editing", "creator tools", "automation", "ai agents"], "summary_tokens_used": 1447, "summary_status": "ok"}, {"title": "Mebus / cupp", "description": "Common User Passwords Profiler (CUPP)", "url": "https://github.com/Mebus/cupp", "summary": "Password profiling tool used to generate likely passwords from information about a target user. Supports interactive profiling, dictionary-based modes, username/password lists, and imported wordlists. Intended for legal penetration tests and forensic investigations where weak-password discovery matters. Runs as a Python CLI and ships with configuration and wordlist-related options.", "summary_bullets": ["Password profiling tool used to generate likely passwords from information about a target user.", "Supports interactive profiling, dictionary-based modes, username/password lists, and imported wordlists.", "Intended for legal penetration tests and forensic investigations where weak-password discovery matters.", "Runs as a Python CLI and ships with configuration and wordlist-related options."], "tags": ["security", "passwords", "cli tool", "penetration testing"], "summary_tokens_used": 904, "summary_status": "ok"}, {"title": "ripienaar / free-for-dev", "description": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev", "url": "https://github.com/ripienaar/free-for-dev", "summary": "Community-maintained list of services that offer free tiers useful to developers and infrastructure teams. Covers cloud providers, hosting, databases, CI/CD, monitoring, security, collaboration, and many other service categories. Helps users compare free developer offerings before choosing tools or platforms for projects. Focused on as-a-service products with documented free tiers rather than self-hosted software.", "summary_bullets": ["Community-maintained list of services that offer free tiers useful to developers and infrastructure teams.", "Covers cloud providers, hosting, databases, CI/CD, monitoring, security, collaboration, and many other service categories.", "Helps users compare free developer offerings before choosing tools or platforms for projects.", "Focused on as-a-service products with documented free tiers rather than self-hosted software."], "tags": ["developer tool", "cloud", "infrastructure", "reference"], "summary_tokens_used": 3870, "summary_status": "ok"}, {"title": "google / agents-cli", "description": "The CLI and skills that turn any coding assistant into an expert at creating, evaluating, and deploying AI agents on Google Cloud.", "url": "https://github.com/google/agents-cli", "summary": "CLI and skills package for building agents on Google’s Gemini Enterprise Agent Platform. Helps coding assistants scaffold, evaluate, deploy, publish, and observe enterprise-grade agents. Includes commands for project setup, evaluation workflows, deployment, and Google Cloud integration. Designed to work with tools like Claude Code, Codex, and other coding agents.", "summary_bullets": ["CLI and skills package for building agents on Google’s Gemini Enterprise Agent Platform.", "Helps coding assistants scaffold, evaluate, deploy, publish, and observe enterprise-grade agents.", "Includes commands for project setup, evaluation workflows, deployment, and Google Cloud integration.", "Designed to work with tools like Claude Code, Codex, and other coding agents."], "tags": ["ai agents", "cloud", "developer tool", "automation"], "summary_tokens_used": 2005, "summary_status": "ok"}, {"title": "roboflow / supervision", "description": "We write your reusable computer vision tools. 💜", "url": "https://github.com/roboflow/supervision", "summary": "Computer vision toolkit that provides utilities for loading data, annotating detections, and working with datasets. Works with many model backends and connectors, including detection, segmentation, and classification pipelines. Offers annotation helpers and dataset conversion/splitting/merging utilities for vision workflows. Used by developers building computer vision applications, analytics, and visual monitoring systems.", "summary_bullets": ["Computer vision toolkit that provides utilities for loading data, annotating detections, and working with datasets.", "Works with many model backends and connectors, including detection, segmentation, and classification pipelines.", "Offers annotation helpers and dataset conversion/splitting/merging utilities for vision workflows.", "Used by developers building computer vision applications, analytics, and visual monitoring systems."], "tags": ["computer vision", "developer tool", "machine learning", "data tooling"], "summary_tokens_used": 1685, "summary_status": "ok"}, {"title": "ogulcancelik / herdr", "description": "agent multiplexer that lives in your terminal.", "url": "https://github.com/ogulcancelik/herdr", "summary": "Terminal-based workspace manager for running multiple coding agents in parallel with real terminal panes. Shows agent status at a glance, including whether each agent is blocked, working, idle, or done. Supports workspaces, tabs, splits, detach/reattach, remote use over SSH, and a socket API for automation. Aims to replace the limitations of tmux-style workflows with agent-aware terminal management.", "summary_bullets": ["Terminal-based workspace manager for running multiple coding agents in parallel with real terminal panes.", "Shows agent status at a glance, including whether each agent is blocked, working, idle, or done.", "Supports workspaces, tabs, splits, detach/reattach, remote use over SSH, and a socket API for automation.", "Aims to replace the limitations of tmux-style workflows with agent-aware terminal management."], "tags": ["terminal tool", "ai agents", "developer tool", "productivity"], "summary_tokens_used": 2206, "summary_status": "ok"}, {"title": "simplex-chat / simplex-chat", "description": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!", "url": "https://github.com/simplex-chat/simplex-chat", "summary": "Private messaging platform designed to avoid user identifiers and protect who users talk to as well as message content. Offers mobile apps, desktop/CLI support, group chat, and private connections through shareable links or QR codes. Uses end-to-end encryption plus additional privacy measures to reduce metadata exposure. Includes a developer ecosystem for chat bots, integrations, and community translations.", "summary_bullets": ["Private messaging platform designed to avoid user identifiers and protect who users talk to as well as message content.", "Offers mobile apps, desktop/CLI support, group chat, and private connections through shareable links or QR codes.", "Uses end-to-end encryption plus additional privacy measures to reduce metadata exposure.", "Includes a developer ecosystem for chat bots, integrations, and community translations."], "tags": ["messaging", "privacy", "security", "mobile"], "summary_tokens_used": 3870, "summary_status": "ok"}, {"title": "CoreBunch / Instatic", "description": "Instatic is a modern self-hosted visual CMS - get it running in 1 minute", "url": "https://github.com/CoreBunch/Instatic", "summary": "Self-hosted CMS that combines visual editing, content management, publishing, media, forms, and plugins in one Bun server. Publishes clean semantic HTML and compact CSS instead of shipping a heavy runtime to visitors. Includes design-token driven styling, reusable components, data tables, access control, and an AI-assisted page editor. Built for people who want to own their site and avoid a fragmented CMS and hosting stack.", "summary_bullets": ["Self-hosted CMS that combines visual editing, content management, publishing, media, forms, and plugins in one Bun server.", "Publishes clean semantic HTML and compact CSS instead of shipping a heavy runtime to visitors.", "Includes design-token driven styling, reusable components, data tables, access control, and an AI-assisted page editor.", "Built for people who want to own their site and avoid a fragmented CMS and hosting stack."], "tags": ["cms", "web design", "self-hosted", "content management"], "summary_tokens_used": 3870, "summary_status": "ok"}, {"title": "microsoft / AI-For-Beginners", "description": "12 Weeks, 24 Lessons, AI for All!", "url": "https://github.com/microsoft/AI-For-Beginners", "summary": "Beginner-friendly 12-week curriculum for learning artificial intelligence through lessons, quizzes, and labs. Covers symbolic AI, neural networks, computer vision, NLP, reinforcement learning, ethics, and multi-agent systems. Includes code examples and labs using frameworks such as TensorFlow and PyTorch. Translated into many languages and structured for classroom or self-study use.", "summary_bullets": ["Beginner-friendly 12-week curriculum for learning artificial intelligence through lessons, quizzes, and labs.", "Covers symbolic AI, neural networks, computer vision, NLP, reinforcement learning, ethics, and multi-agent systems.", "Includes code examples and labs using frameworks such as TensorFlow and PyTorch.", "Translated into many languages and structured for classroom or self-study use."], "tags": ["education", "artificial intelligence", "machine learning", "course"], "summary_tokens_used": 2775, "summary_status": "ok"}, {"title": "facebook / astryx", "description": "An open source design system that's fully customizable and agent ready", "url": "https://github.com/facebook/astryx", "summary": "Open-source design system with more than 150 accessible components, themes, templates, and CLI tooling. Built to support both developers and AI assistants with the same APIs, docs, and workflows. Allows deep customization through CSS custom properties and direct component composition without wrapper-heavy patterns. Targets teams building consistent product interfaces with accessible, reusable UI foundations.", "summary_bullets": ["Open-source design system with more than 150 accessible components, themes, templates, and CLI tooling.", "Built to support both developers and AI assistants with the same APIs, docs, and workflows.", "Allows deep customization through CSS custom properties and direct component composition without wrapper-heavy patterns.", "Targets teams building consistent product interfaces with accessible, reusable UI foundations."], "tags": ["design system", "ui kit", "developer tool", "accessibility"], "summary_tokens_used": 1520, "summary_status": "ok"}]}], "total_repositories": 15, "total_summary_tokens_used": 41788};
+    const state = {
+      report,
+      activeTag: 'all',
+    };
+
+    const meta = document.getElementById('meta');
+    const filters = document.getElementById('filters');
+    const repoGrid = document.getElementById('repoGrid');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    let tileObserver = null;
+
+    sidebarToggle.addEventListener('click', () => {
+      const collapsed = document.body.classList.toggle('sidebar-collapsed');
+      sidebarToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      layoutTilesSoon();
+    });
+
+    render();
+
+    function render() {
+      renderMeta();
+      renderFilters();
+      renderRepos();
+    }
+
+    function renderMeta() {
+      meta.innerHTML = [
+        `<span>Date: ${escapeHtml(state.report.date)}</span>`,
+        `<span>Repos: ${state.report.total_repositories}</span>`,
+        `<span>Summary tokens: ${state.report.total_summary_tokens_used}</span>`,
+      ].join('');
+    }
+
+    function renderFilters() {
+      const repos = flattenRepos();
+      const tags = sortedTagsByFrequency(repos);
+      const buttons = ['all', ...tags].map((tag) => {
+        const label = tag === 'all' ? 'All' : `${tag} ${tagCount(repos, tag)}`;
+        const pressed = state.activeTag === tag ? 'true' : 'false';
+        return `<button type="button" aria-pressed="${pressed}" data-tag="${escapeAttribute(tag)}">${escapeHtml(label)}</button>`;
+      });
+
+      filters.innerHTML = buttons.join('');
+      filters.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => {
+          state.activeTag = button.dataset.tag;
+          render();
+        });
+      });
+    }
+
+    function renderRepos() {
+      const repos = flattenRepos().filter((repo) => {
+        return state.activeTag === 'all' || repoTags(repo).includes(state.activeTag);
+      });
+
+      if (!repos.length) {
+        repoGrid.innerHTML = '<div class="empty">No repositories for this filter.</div>';
+        repoGrid.style.height = 'auto';
+        return;
+      }
+
+      repoGrid.innerHTML = repos.map(renderRepo).join('');
+      observeTileSizes();
+      repoGrid.querySelectorAll('.tile-toggle').forEach((button) => {
+        button.addEventListener('click', () => {
+          const tile = button.closest('.tile');
+          const wasExpanded = tile.classList.contains('expanded');
+
+          if (wasExpanded) {
+            closeExpandedTile();
+            layoutTilesSoon();
+            return;
+          }
+
+          closeExpandedTile();
+          tile.classList.add('expanded');
+          button.setAttribute('aria-expanded', 'true');
+          setDetailsHeight(tile);
+          layoutTilesSoon();
+        });
+      });
+      layoutTilesSoon();
+    }
+
+    function closeExpandedTile() {
+      repoGrid.querySelectorAll('.tile.expanded').forEach((tile) => {
+        tile.classList.remove('expanded');
+        const details = tile.querySelector('.details');
+        if (details) {
+          details.style.maxHeight = '0px';
+        }
+        const button = tile.querySelector('.tile-toggle');
+        if (button) {
+          button.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    function setDetailsHeight(tile) {
+      const details = tile.querySelector('.details');
+      if (details) {
+        details.style.maxHeight = `${details.scrollHeight + 160}px`;
+      }
+    }
+
+    function observeTileSizes() {
+      if (tileObserver) {
+        tileObserver.disconnect();
+      }
+
+      tileObserver = new ResizeObserver(() => layoutTilesSoon());
+      repoGrid.querySelectorAll('.tile').forEach((tile) => tileObserver.observe(tile));
+    }
+
+    function layoutTilesSoon() {
+      requestAnimationFrame(layoutTiles);
+    }
+
+    function layoutTiles() {
+      const tiles = [...repoGrid.querySelectorAll('.tile')];
+      if (!tiles.length) {
+        return;
+      }
+
+      const gap = 14;
+      const minColumnWidth = 280;
+      const containerWidth = repoGrid.clientWidth;
+      const columns = Math.max(1, Math.floor((containerWidth + gap) / (minColumnWidth + gap)));
+      const columnWidth = (containerWidth - gap * (columns - 1)) / columns;
+      const columnHeights = Array(columns).fill(0);
+
+      tiles.forEach((tile) => {
+        tile.style.width = `${columnWidth}px`;
+        const column = columnHeights.indexOf(Math.min(...columnHeights));
+        const x = column * (columnWidth + gap);
+        const y = columnHeights[column];
+
+        tile.style.transform = `translate(${x}px, ${y}px)`;
+        columnHeights[column] += tile.offsetHeight + gap;
+      });
+
+      repoGrid.style.height = `${Math.max(...columnHeights) - gap}px`;
+    }
+
+    window.addEventListener('resize', layoutTilesSoon);
+
+    function sortedTagsByFrequency(repos) {
+      const counts = new Map();
+      repos.forEach((repo) => {
+        repoTags(repo).forEach((tag) => {
+          counts.set(tag, (counts.get(tag) || 0) + 1);
+        });
+      });
+
+      return [...counts.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([tag]) => tag);
+    }
+
+    function tagCount(repos, tag) {
+      return repos.filter((repo) => repoTags(repo).includes(tag)).length;
+    }
+
+    function repoTags(repo) {
+      return Array.isArray(repo.tags) ? repo.tags.slice(0, 5) : [];
+    }
+
+    function repoBullets(repo) {
+      if (Array.isArray(repo.summary_bullets) && repo.summary_bullets.length) {
+        return repo.summary_bullets;
+      }
+
+      return [repo.summary || 'Summary unavailable.'];
+    }
+
+    function flattenRepos() {
+      return state.report.languages.flatMap((language) => {
+        return language.repositories.map((repo) => ({ ...repo }));
+      });
+    }
+
+    function renderRepo(repo) {
+      const statusClass = `status-${repo.summary_status}`;
+      const tags = repoTags(repo);
+      const tagHtml = tags.length
+        ? tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('')
+        : '<span class="tag">untagged</span>';
+      const bullets = repoBullets(repo)
+        .map((bullet) => `<li>${escapeHtml(bullet)}</li>`)
+        .join('');
+
+      return `
+        <article class="tile">
+          <button type="button" class="tile-toggle" aria-expanded="false">
+            <div class="repo-title">
+              <span>${escapeHtml(repo.title)}</span>
+            </div>
+            <p class="description">${escapeHtml(repo.description || 'No description provided.')}</p>
+            <div class="repo-tags">${tagHtml}</div>
+            <div class="tile-footer">
+              <span class="${escapeHtml(statusClass)}">${escapeHtml(repo.summary_status)}</span>
+              <span>${repo.summary_tokens_used} tokens</span>
+            </div>
+          </button>
+          <div class="details">
+            <ul class="summary-list">${bullets}</ul>
+            <a class="repo-link" href="${escapeAttribute(repo.url)}" target="_blank" rel="noopener">Open repository</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value).replace(/`/g, '&#96;');
+    }
+  </script>
+</body>
+</html>

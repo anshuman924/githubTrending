@@ -1,0 +1,314 @@
+{
+  "date": "2026-07-01",
+  "languages": [
+    {
+      "name": "trending",
+      "repository_count": 15,
+      "summary_tokens_used": 41788,
+      "repositories": [
+        {
+          "title": "hasaneyldrm / exercises-dataset",
+          "description": "A comprehensive dataset of 433 fitness exercises. Each entry includes name, category, target muscle group, equipment, instructions, thumbnail image, and animation video.",
+          "url": "https://github.com/hasaneyldrm/exercises-dataset",
+          "summary": "Curated dataset of 1,324 fitness exercises with metadata for category, body part, equipment, target, and muscle groups. Includes step-by-step instructions translated into six languages: English, Spanish, Italian, Turkish, Russian, and Chinese. Provides a client-side exercise browser with search and filtering, plus a setup guide for building a backend around the dataset. Designed for workout apps, exercise recommendation systems, and fitness research; media assets are intentionally not bundled.",
+          "summary_bullets": [
+            "Curated dataset of 1,324 fitness exercises with metadata for category, body part, equipment, target, and muscle groups.",
+            "Includes step-by-step instructions translated into six languages: English, Spanish, Italian, Turkish, Russian, and Chinese.",
+            "Provides a client-side exercise browser with search and filtering, plus a setup guide for building a backend around the dataset.",
+            "Designed for workout apps, exercise recommendation systems, and fitness research; media assets are intentionally not bundled."
+          ],
+          "tags": [
+            "fitness",
+            "dataset",
+            "health",
+            "developer tool"
+          ],
+          "summary_tokens_used": 3871,
+          "summary_status": "ok"
+        },
+        {
+          "title": "usestrix / strix",
+          "description": "Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.",
+          "url": "https://github.com/usestrix/strix",
+          "summary": "Autonomous AI penetration testing tool that runs against codebases and web apps to find vulnerabilities dynamically. Validates findings with proof-of-concept exploits instead of relying only on static analysis. Provides a developer-focused CLI, remediation guidance, and reporting for security teams and app developers. Can integrate with GitHub Actions and CI/CD to block insecure code before merge.",
+          "summary_bullets": [
+            "Autonomous AI penetration testing tool that runs against codebases and web apps to find vulnerabilities dynamically.",
+            "Validates findings with proof-of-concept exploits instead of relying only on static analysis.",
+            "Provides a developer-focused CLI, remediation guidance, and reporting for security teams and app developers.",
+            "Can integrate with GitHub Actions and CI/CD to block insecure code before merge."
+          ],
+          "tags": [
+            "security",
+            "devops",
+            "cli tool",
+            "developer tool"
+          ],
+          "summary_tokens_used": 2813,
+          "summary_status": "ok"
+        },
+        {
+          "title": "msitarzewski / agency-agents",
+          "description": "A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy injectors to reality checkers. Each agent is a specialized expert with personality, processes, and proven deliverables.",
+          "url": "https://github.com/msitarzewski/agency-agents",
+          "summary": "Collection of specialized AI agent personas for different workstreams like engineering, design, sales, and marketing. Each agent includes a distinct voice, workflow, and deliverable-focused instructions rather than a generic prompt template. Can be installed into tools such as Claude Code, Cursor, Codex, Gemini, and others through the included app or scripts. Aims to help users assemble a task-specific AI team for coding, review, research, docs, and operations.",
+          "summary_bullets": [
+            "Collection of specialized AI agent personas for different workstreams like engineering, design, sales, and marketing.",
+            "Each agent includes a distinct voice, workflow, and deliverable-focused instructions rather than a generic prompt template.",
+            "Can be installed into tools such as Claude Code, Cursor, Codex, Gemini, and others through the included app or scripts.",
+            "Aims to help users assemble a task-specific AI team for coding, review, research, docs, and operations."
+          ],
+          "tags": [
+            "ai agents",
+            "developer tool",
+            "productivity",
+            "collaboration"
+          ],
+          "summary_tokens_used": 3871,
+          "summary_status": "ok"
+        },
+        {
+          "title": "altic-dev / FluidVoice",
+          "description": "Fastest and only macOS Dictation app with on-device STT and custom trained AI enhancement model - Local Wispr Flow alternative. One ⭐ takes us a long way :)) Windows, iOS and Linux coming soon.",
+          "url": "https://github.com/altic-dev/FluidVoice",
+          "summary": "Open-source macOS dictation app with on-device AI enhancement for faster, private voice-to-text. Supports multiple speech models, live transcription overlay, global hotkeys, and typing into other apps. Offers command mode for controlling the Mac by voice and write mode for dictating or rewriting text in place. Keeps audio and text local unless the user opts into cloud AI providers or extra features.",
+          "summary_bullets": [
+            "Open-source macOS dictation app with on-device AI enhancement for faster, private voice-to-text.",
+            "Supports multiple speech models, live transcription overlay, global hotkeys, and typing into other apps.",
+            "Offers command mode for controlling the Mac by voice and write mode for dictating or rewriting text in place.",
+            "Keeps audio and text local unless the user opts into cloud AI providers or extra features."
+          ],
+          "tags": [
+            "dictation",
+            "audio",
+            "productivity",
+            "macos"
+          ],
+          "summary_tokens_used": 3210,
+          "summary_status": "ok"
+        },
+        {
+          "title": "diegosouzapw / OmniRoute",
+          "description": "Never stop coding. Free AI gateway: one endpoint, 231+ providers (50+ free), connect Claude Code, Codex, Cursor, Cline & Copilot to FREE Claude/GPT/Gemini. RTK+Caveman stacked compression saves 15-95% tokens, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA.",
+          "url": "https://github.com/diegosouzapw/OmniRoute",
+          "summary": "AI gateway that routes coding tools through a large pool of model providers using one endpoint. Supports auto-fallback across subscription, paid, cheap, and free providers to keep requests flowing when limits are hit. Adds token compression, routing strategies, cost telemetry, guardrails, memory, and MCP support for agent workflows. Targets users of coding assistants and teams that want lower cost and more resilient model access.",
+          "summary_bullets": [
+            "AI gateway that routes coding tools through a large pool of model providers using one endpoint.",
+            "Supports auto-fallback across subscription, paid, cheap, and free providers to keep requests flowing when limits are hit.",
+            "Adds token compression, routing strategies, cost telemetry, guardrails, memory, and MCP support for agent workflows.",
+            "Targets users of coding assistants and teams that want lower cost and more resilient model access."
+          ],
+          "tags": [
+            "ai gateway",
+            "developer tool",
+            "productivity",
+            "infrastructure"
+          ],
+          "summary_tokens_used": 3871,
+          "summary_status": "ok"
+        },
+        {
+          "title": "browser-use / video-use",
+          "description": "Edit videos with coding agents",
+          "url": "https://github.com/browser-use/video-use",
+          "summary": "Video editing workflow that lets users chat with Claude Code to produce a final edited video from raw footage. Focuses on removing filler, trimming dead space, adding subtitle styles, audio fades, color grading, and overlays. Uses transcripts and selective visual previews so the model edits based on structure rather than frame dumping. Designed for creators who want automated editing without manual timeline work or preset-heavy tools.",
+          "summary_bullets": [
+            "Video editing workflow that lets users chat with Claude Code to produce a final edited video from raw footage.",
+            "Focuses on removing filler, trimming dead space, adding subtitle styles, audio fades, color grading, and overlays.",
+            "Uses transcripts and selective visual previews so the model edits based on structure rather than frame dumping.",
+            "Designed for creators who want automated editing without manual timeline work or preset-heavy tools."
+          ],
+          "tags": [
+            "video editing",
+            "creator tools",
+            "automation",
+            "ai agents"
+          ],
+          "summary_tokens_used": 1447,
+          "summary_status": "ok"
+        },
+        {
+          "title": "Mebus / cupp",
+          "description": "Common User Passwords Profiler (CUPP)",
+          "url": "https://github.com/Mebus/cupp",
+          "summary": "Password profiling tool used to generate likely passwords from information about a target user. Supports interactive profiling, dictionary-based modes, username/password lists, and imported wordlists. Intended for legal penetration tests and forensic investigations where weak-password discovery matters. Runs as a Python CLI and ships with configuration and wordlist-related options.",
+          "summary_bullets": [
+            "Password profiling tool used to generate likely passwords from information about a target user.",
+            "Supports interactive profiling, dictionary-based modes, username/password lists, and imported wordlists.",
+            "Intended for legal penetration tests and forensic investigations where weak-password discovery matters.",
+            "Runs as a Python CLI and ships with configuration and wordlist-related options."
+          ],
+          "tags": [
+            "security",
+            "passwords",
+            "cli tool",
+            "penetration testing"
+          ],
+          "summary_tokens_used": 904,
+          "summary_status": "ok"
+        },
+        {
+          "title": "ripienaar / free-for-dev",
+          "description": "A list of SaaS, PaaS and IaaS offerings that have free tiers of interest to devops and infradev",
+          "url": "https://github.com/ripienaar/free-for-dev",
+          "summary": "Community-maintained list of services that offer free tiers useful to developers and infrastructure teams. Covers cloud providers, hosting, databases, CI/CD, monitoring, security, collaboration, and many other service categories. Helps users compare free developer offerings before choosing tools or platforms for projects. Focused on as-a-service products with documented free tiers rather than self-hosted software.",
+          "summary_bullets": [
+            "Community-maintained list of services that offer free tiers useful to developers and infrastructure teams.",
+            "Covers cloud providers, hosting, databases, CI/CD, monitoring, security, collaboration, and many other service categories.",
+            "Helps users compare free developer offerings before choosing tools or platforms for projects.",
+            "Focused on as-a-service products with documented free tiers rather than self-hosted software."
+          ],
+          "tags": [
+            "developer tool",
+            "cloud",
+            "infrastructure",
+            "reference"
+          ],
+          "summary_tokens_used": 3870,
+          "summary_status": "ok"
+        },
+        {
+          "title": "google / agents-cli",
+          "description": "The CLI and skills that turn any coding assistant into an expert at creating, evaluating, and deploying AI agents on Google Cloud.",
+          "url": "https://github.com/google/agents-cli",
+          "summary": "CLI and skills package for building agents on Google’s Gemini Enterprise Agent Platform. Helps coding assistants scaffold, evaluate, deploy, publish, and observe enterprise-grade agents. Includes commands for project setup, evaluation workflows, deployment, and Google Cloud integration. Designed to work with tools like Claude Code, Codex, and other coding agents.",
+          "summary_bullets": [
+            "CLI and skills package for building agents on Google’s Gemini Enterprise Agent Platform.",
+            "Helps coding assistants scaffold, evaluate, deploy, publish, and observe enterprise-grade agents.",
+            "Includes commands for project setup, evaluation workflows, deployment, and Google Cloud integration.",
+            "Designed to work with tools like Claude Code, Codex, and other coding agents."
+          ],
+          "tags": [
+            "ai agents",
+            "cloud",
+            "developer tool",
+            "automation"
+          ],
+          "summary_tokens_used": 2005,
+          "summary_status": "ok"
+        },
+        {
+          "title": "roboflow / supervision",
+          "description": "We write your reusable computer vision tools. 💜",
+          "url": "https://github.com/roboflow/supervision",
+          "summary": "Computer vision toolkit that provides utilities for loading data, annotating detections, and working with datasets. Works with many model backends and connectors, including detection, segmentation, and classification pipelines. Offers annotation helpers and dataset conversion/splitting/merging utilities for vision workflows. Used by developers building computer vision applications, analytics, and visual monitoring systems.",
+          "summary_bullets": [
+            "Computer vision toolkit that provides utilities for loading data, annotating detections, and working with datasets.",
+            "Works with many model backends and connectors, including detection, segmentation, and classification pipelines.",
+            "Offers annotation helpers and dataset conversion/splitting/merging utilities for vision workflows.",
+            "Used by developers building computer vision applications, analytics, and visual monitoring systems."
+          ],
+          "tags": [
+            "computer vision",
+            "developer tool",
+            "machine learning",
+            "data tooling"
+          ],
+          "summary_tokens_used": 1685,
+          "summary_status": "ok"
+        },
+        {
+          "title": "ogulcancelik / herdr",
+          "description": "agent multiplexer that lives in your terminal.",
+          "url": "https://github.com/ogulcancelik/herdr",
+          "summary": "Terminal-based workspace manager for running multiple coding agents in parallel with real terminal panes. Shows agent status at a glance, including whether each agent is blocked, working, idle, or done. Supports workspaces, tabs, splits, detach/reattach, remote use over SSH, and a socket API for automation. Aims to replace the limitations of tmux-style workflows with agent-aware terminal management.",
+          "summary_bullets": [
+            "Terminal-based workspace manager for running multiple coding agents in parallel with real terminal panes.",
+            "Shows agent status at a glance, including whether each agent is blocked, working, idle, or done.",
+            "Supports workspaces, tabs, splits, detach/reattach, remote use over SSH, and a socket API for automation.",
+            "Aims to replace the limitations of tmux-style workflows with agent-aware terminal management."
+          ],
+          "tags": [
+            "terminal tool",
+            "ai agents",
+            "developer tool",
+            "productivity"
+          ],
+          "summary_tokens_used": 2206,
+          "summary_status": "ok"
+        },
+        {
+          "title": "simplex-chat / simplex-chat",
+          "description": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!",
+          "url": "https://github.com/simplex-chat/simplex-chat",
+          "summary": "Private messaging platform designed to avoid user identifiers and protect who users talk to as well as message content. Offers mobile apps, desktop/CLI support, group chat, and private connections through shareable links or QR codes. Uses end-to-end encryption plus additional privacy measures to reduce metadata exposure. Includes a developer ecosystem for chat bots, integrations, and community translations.",
+          "summary_bullets": [
+            "Private messaging platform designed to avoid user identifiers and protect who users talk to as well as message content.",
+            "Offers mobile apps, desktop/CLI support, group chat, and private connections through shareable links or QR codes.",
+            "Uses end-to-end encryption plus additional privacy measures to reduce metadata exposure.",
+            "Includes a developer ecosystem for chat bots, integrations, and community translations."
+          ],
+          "tags": [
+            "messaging",
+            "privacy",
+            "security",
+            "mobile"
+          ],
+          "summary_tokens_used": 3870,
+          "summary_status": "ok"
+        },
+        {
+          "title": "CoreBunch / Instatic",
+          "description": "Instatic is a modern self-hosted visual CMS - get it running in 1 minute",
+          "url": "https://github.com/CoreBunch/Instatic",
+          "summary": "Self-hosted CMS that combines visual editing, content management, publishing, media, forms, and plugins in one Bun server. Publishes clean semantic HTML and compact CSS instead of shipping a heavy runtime to visitors. Includes design-token driven styling, reusable components, data tables, access control, and an AI-assisted page editor. Built for people who want to own their site and avoid a fragmented CMS and hosting stack.",
+          "summary_bullets": [
+            "Self-hosted CMS that combines visual editing, content management, publishing, media, forms, and plugins in one Bun server.",
+            "Publishes clean semantic HTML and compact CSS instead of shipping a heavy runtime to visitors.",
+            "Includes design-token driven styling, reusable components, data tables, access control, and an AI-assisted page editor.",
+            "Built for people who want to own their site and avoid a fragmented CMS and hosting stack."
+          ],
+          "tags": [
+            "cms",
+            "web design",
+            "self-hosted",
+            "content management"
+          ],
+          "summary_tokens_used": 3870,
+          "summary_status": "ok"
+        },
+        {
+          "title": "microsoft / AI-For-Beginners",
+          "description": "12 Weeks, 24 Lessons, AI for All!",
+          "url": "https://github.com/microsoft/AI-For-Beginners",
+          "summary": "Beginner-friendly 12-week curriculum for learning artificial intelligence through lessons, quizzes, and labs. Covers symbolic AI, neural networks, computer vision, NLP, reinforcement learning, ethics, and multi-agent systems. Includes code examples and labs using frameworks such as TensorFlow and PyTorch. Translated into many languages and structured for classroom or self-study use.",
+          "summary_bullets": [
+            "Beginner-friendly 12-week curriculum for learning artificial intelligence through lessons, quizzes, and labs.",
+            "Covers symbolic AI, neural networks, computer vision, NLP, reinforcement learning, ethics, and multi-agent systems.",
+            "Includes code examples and labs using frameworks such as TensorFlow and PyTorch.",
+            "Translated into many languages and structured for classroom or self-study use."
+          ],
+          "tags": [
+            "education",
+            "artificial intelligence",
+            "machine learning",
+            "course"
+          ],
+          "summary_tokens_used": 2775,
+          "summary_status": "ok"
+        },
+        {
+          "title": "facebook / astryx",
+          "description": "An open source design system that's fully customizable and agent ready",
+          "url": "https://github.com/facebook/astryx",
+          "summary": "Open-source design system with more than 150 accessible components, themes, templates, and CLI tooling. Built to support both developers and AI assistants with the same APIs, docs, and workflows. Allows deep customization through CSS custom properties and direct component composition without wrapper-heavy patterns. Targets teams building consistent product interfaces with accessible, reusable UI foundations.",
+          "summary_bullets": [
+            "Open-source design system with more than 150 accessible components, themes, templates, and CLI tooling.",
+            "Built to support both developers and AI assistants with the same APIs, docs, and workflows.",
+            "Allows deep customization through CSS custom properties and direct component composition without wrapper-heavy patterns.",
+            "Targets teams building consistent product interfaces with accessible, reusable UI foundations."
+          ],
+          "tags": [
+            "design system",
+            "ui kit",
+            "developer tool",
+            "accessibility"
+          ],
+          "summary_tokens_used": 1520,
+          "summary_status": "ok"
+        }
+      ]
+    }
+  ],
+  "total_repositories": 15,
+  "total_summary_tokens_used": 41788
+}
